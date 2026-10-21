@@ -25,17 +25,6 @@ export function revelaciones() {
       yPercent: 7, ease: 'none', scrollTrigger: { trigger: m, start: 'top bottom', end: 'bottom top', scrub: true },
     }));
 
-  // Las cifras cuentan desde cero hasta su valor al aparecer.
-  document.querySelectorAll<HTMLElement>('[data-contar]').forEach((el) => {
-    const contador = { v: 0 };
-    el.textContent = '0'; // sin script se queda la cifra real del HTML
-    gsap.to(contador, {
-      v: Number(el.dataset.contar), duration: 1.4, ease: 'power3.out', snap: { v: 1 },
-      onUpdate: () => { el.textContent = String(contador.v); },
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-    });
-  });
-
   // Así de fácil: la línea avanza con el scroll y cada paso se marca cuando la línea lo alcanza.
   const marco = document.querySelector<HTMLElement>('.pasos-marco');
   const avance = document.querySelector<HTMLElement>('.pasos-avance');

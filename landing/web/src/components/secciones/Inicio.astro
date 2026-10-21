@@ -1,8 +1,8 @@
 ---
 import Dato from '../Dato.astro';
 import WhatsAppIcon from '../WhatsAppIcon.astro';
-import { NEGOCIO, HORARIO } from '../../data/local';
-import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
+import { NEGOCIO, HORARIO, JUEGOS } from '../../data/local';
+import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
 ---
 <!-- La sala a oscuras y el control que se enciende con el scroll (efectos/inicio.ts + efectos/control3d.ts) -->
 <section class="inicio" id="inicio">
@@ -36,9 +36,9 @@ import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
         </a>
       </div>
       <dl class="datos-rapidos aparece">
-        <div data-estado><dt>Hoy</dt><dd><Dato pendiente={HORARIO.pendiente}><span data-estado-texto>{FILAS_HORARIO[0].dia}, {FILAS_HORARIO[0].rango}</span></Dato></dd></div>
-        <div><dt>Dónde</dt><dd><Dato pendiente={NEGOCIO.direccion.pendiente}>{NEGOCIO.direccion.texto}</Dato></dd></div>
-      </dl>
+        <div class="cifra"><dt>tipos de puesto</dt><dd>{CUANTOS.estaciones}</dd></div>
+        <div class="cifra"><dt>juegos</dt><dd><Dato pendiente={JUEGOS.pendiente}>{CUANTOS.juegos}+</Dato></dd></div>
+        <div class="cifra"><dt>días a la semana</dt><dd><Dato pendiente={HORARIO.pendiente}>{DIAS_ABIERTO}</Dato></dd></div>      </dl>
     </div>
   </div>
   <p class="pista" aria-hidden="true"><span></span>Desliza para encender la sala</p>
@@ -96,9 +96,13 @@ import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
   .boton-secundario { background: transparent; color: var(--texto-noche); border-color: color-mix(in srgb, var(--texto-noche) 28%, transparent); }
   .boton-secundario:hover { border-color: var(--cian); }
 
-  .datos-rapidos { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; margin: 1.5rem 0 0; padding-top: 1.1rem; border-top: 1px solid color-mix(in srgb, var(--texto-noche) 12%, transparent); }
+  /* Cifras del local y la dirección, en una sola franja bajo el título */
+  .datos-rapidos { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem 2rem; margin: 1.75rem 0 0; padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, var(--texto-noche) 12%, transparent); }
   .datos-rapidos dt { color: var(--gris-noche); }
-  .datos-rapidos dd { margin: 0.2rem 0 0; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .datos-rapidos dd { margin: 0; }
+  .cifra { display: flex; flex-direction: column-reverse; }
+  .cifra dd { font: 850 clamp(1.75rem, 3.2vw, 2.4rem)/1 var(--fd); font-stretch: 125%; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .cifra dt { margin-top: 0.3rem; }
 
   .pista {
     display: none; position: absolute; left: 50%; bottom: calc(3.5rem + var(--barra-movil)); translate: -50% 0; z-index: 2;

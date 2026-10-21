@@ -2,7 +2,9 @@
 import { ESTACIONES, HORARIO, JUEGOS, MENSAJE_WA, NEGOCIO } from '../data/local';
 import { hora, type Dia } from './hora';
 
-export const WA = `https://wa.me/${NEGOCIO.whatsapp.numero}?text=${encodeURIComponent(MENSAJE_WA)}`;
+// Enlace a WhatsApp con el mensaje ya escrito: cada estación, paquete y plan abre el suyo.
+export const whatsapp = (mensaje: string) => `https://wa.me/${NEGOCIO.whatsapp.numero}?text=${encodeURIComponent(mensaje)}`;
+export const WA = whatsapp(MENSAJE_WA);
 
 const NOMBRES = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 const may = (s: string) => s[0].toUpperCase() + s.slice(1);

@@ -94,6 +94,7 @@ export async function escenaInicio() {
   control = vivo;
   caja3d.classList.add('con-3d');
   if (poster !== null) {
+    (window as unknown as { __botones: unknown }).__botones = vivo.botones();
     (window as unknown as { __poster: string }).__poster = caja3d.querySelector('canvas')!.toDataURL('image/webp', 0.9);
     return;
   }

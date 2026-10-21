@@ -5,7 +5,8 @@ const ESCRITORIO = '(min-width: 64rem)';
 const hayWebGL = () => { try { return !!document.createElement('canvas').getContext('webgl'); } catch { return false; } };
 
 // Escritorio: la pantalla de la izquierda se queda fija y, cuando cada estación de la derecha llega al centro,
-// cambia el video (con WebGL, un borde líquido; sin WebGL, un barrido) y el número y el nombre del puesto se reemplazan.
+// cambia el video (con WebGL, un borde líquido; sin WebGL, un barrido), el número y el nombre del puesto se
+// reemplazan y en el control de la esquina se enciende el botón de esa estación.
 export async function recorridoEstaciones() {
   const seccion = document.getElementById('estaciones');
   const escenario = document.querySelector<HTMLElement>('.escenario');
@@ -14,6 +15,7 @@ export async function recorridoEstaciones() {
   const num = document.querySelector<HTMLElement>('.escenario-num');
   const nombre = document.querySelector<HTMLElement>('.escenario-nombre');
   const barras = [...document.querySelectorAll<HTMLElement>('.escenario-progreso li')];
+  const anillos = [...document.querySelectorAll<HTMLElement>('.mando-anillo')];
   if (!seccion || !escenario || !capas.length || !num) return;
   const videos = capas.map((c) => c.querySelector('video')!);
 
@@ -50,6 +52,7 @@ export async function recorridoEstaciones() {
     const mostrar = (i: number) => {
       paneles.forEach((p, k) => p.classList.toggle('activa', k === i));
       barras.forEach((b, k) => b.classList.toggle('lleno', k <= i));
+      anillos.forEach((a, k) => a.classList.toggle('activo', k === i));
       if (i === actual) return;
       const antes = actual;
       actual = i;

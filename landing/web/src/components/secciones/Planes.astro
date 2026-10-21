@@ -1,0 +1,63 @@
+---
+// Planes en grupo: afiches con fotos reales; cada uno abre WhatsApp con el mensaje de ese plan.
+import { Picture } from 'astro:assets';
+import Dato from '../Dato.astro';
+import WhatsAppIcon from '../WhatsAppIcon.astro';
+import { PLANES } from '../../data/local';
+import { whatsapp } from '../../lib/sitio';
+
+const fotos = Object.fromEntries(
+  Object.entries(import.meta.glob<{ default: ImageMetadata }>('../../assets/galeria/*.webp', { eager: true })).map(([k, v]) => [k, v.default]),
+);
+const MENSAJE: Record<string, string> = {
+  'Ven con tu parche': 'Hola GamerZone, vamos a ir varios amigos. ¿Nos pueden apartar puestos juntos?',
+  'Cumpleaños': 'Hola GamerZone, quiero celebrar un cumpleaños en la sala. ¿Qué incluye y cómo se aparta?',
+  'Torneos': 'Hola GamerZone, quiero inscribirme en el próximo torneo. ¿Cuándo es?',
+};
+---
+<section class="seccion" id="planes" aria-labelledby="t-planes">
+  <div class="envoltura">
+    <h2 class="titulo" id="t-planes">Planes en grupo</h2>
+  </div>
+  <div class="envoltura planes cascada">
+    {PLANES.map((p) => (
+      <a class="plan" href={whatsapp(MENSAJE[p.titulo] ?? `Hola GamerZone, quiero información sobre ${p.titulo.toLowerCase()}.`)} target="_blank" rel="noopener">
+        <Picture src={fotos[`../../assets/galeria/${p.foto}.webp`]} formats={['avif']} fallbackFormat="webp" widths={[400, 640]} sizes="(min-width: 48rem) 24rem, 100vw" loading="lazy" alt={p.alt} />
+        <div class="plan-cuerpo">
+          <h3>{p.titulo}</h3>
+          <p><Dato pendiente={p.pendiente}>{p.texto}</Dato></p>
+          <span class="plan-accion"><WhatsAppIcon /> Escríbenos</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* Afiches verticales con la foto real a sangre; todo el afiche es el enlace */
+  .planes { display: grid; gap: 1.25rem; margin-top: 2.25rem; }
+  .plan {
+    position: relative; isolation: isolate; display: block; aspect-ratio: 4 / 5; border-radius: var(--radio); overflow: hidden;
+    background: #0b0d12; color: var(--texto-noche); text-decoration: none; box-shadow: 0 30px 60px -30px rgba(16, 21, 28, 0.6);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+  }
+  .plan:hover { transform: translateY(-6px); box-shadow: 0 40px 70px -30px rgba(16, 21, 28, 0.7); }
+  .plan :global(picture), .plan :global(img) { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+  .plan:hover :global(img) { transform: scale(1.06); }
+  .plan::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(to top, rgba(7, 9, 15, 0.95) 0%, rgba(7, 9, 15, 0.7) 40%, rgba(7, 9, 15, 0) 70%);
+  }
+  .plan-cuerpo { position: absolute; inset: auto 0 0; padding: 1.5rem 1.5rem 1.6rem; }
+  .plan h3 { font-size: var(--t-l); }
+  .plan p { color: color-mix(in srgb, var(--texto-noche) 78%, transparent); margin-top: 0.5rem; font-size: var(--t-s); }
+  .plan-accion {
+    display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 1rem; padding: 0.5rem 0.9rem; border-radius: 999px;
+    font-weight: 650; font-size: var(--t-s); background: color-mix(in srgb, #fff 12%, transparent); backdrop-filter: blur(6px);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .plan-accion :global(svg) { width: 1rem; height: 1rem; }
+  .plan:hover .plan-accion { background: var(--cian); color: #04191a; }
+
+  @media (min-width: 48rem) { .planes { grid-template-columns: repeat(3, 1fr); } }
+</style>

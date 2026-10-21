@@ -70,10 +70,14 @@ with sync_playwright() as p:
     prueba("inicio: escena del scroll activa", pagina.evaluate("document.querySelector('.inicio').classList.contains('escena')"))
     prueba("cabecera: oscura sobre la sala al cargar", not pagina.evaluate("document.querySelector('.cabecera').classList.contains('clara')"))
 
-    bajar_a(pagina, ".cifras", -200)
-    pagina.wait_for_timeout(1200)
-    cifras = pagina.evaluate("[...document.querySelectorAll('[data-contar]')].map(e => e.textContent === e.dataset.contar)")
-    prueba("cifras: terminan de contar en su valor real", bool(cifras) and all(cifras), str(cifras))
+    cifras = pagina.evaluate("[...document.querySelectorAll('.inicio .cifra dd')].map(e => e.textContent.trim())")
+    prueba("inicio: cifras del local", cifras == ["4", "16+", "7"], str(cifras))
+
+    # Cada estación, paquete y plan abre WhatsApp con un mensaje distinto
+    mensajes = pagina.evaluate("""[...document.querySelectorAll('.estacion-cta, .paquete-boton, a.plan')]
+        .map(a => new URL(a.href).searchParams.get('text'))""")
+    prueba("whatsapp: un mensaje propio por estación, paquete y plan",
+           len(mensajes) == 9 and len(set(mensajes)) == 9 and all(mensajes), f"{len(mensajes)} enlaces, {len(set(mensajes))} distintos")
 
     bajar_a(pagina, "#estaciones", 100)
     prueba("cabecera: clara al llegar a la información", pagina.evaluate("document.querySelector('.cabecera').classList.contains('clara')"))
@@ -85,6 +89,8 @@ with sync_playwright() as p:
     prueba("recorrido: el número de puesto sigue a la estación", num == "03", f"muestra «{num}»")
     llenas = pagina.evaluate("document.querySelectorAll('.escenario-progreso li.lleno').length")
     prueba("recorrido: progreso en la tercera estación", llenas == 3, f"{llenas} barras llenas")
+    anillo = pagina.evaluate("[...document.querySelectorAll('.mando-anillo')].findIndex(a => a.classList.contains('activo'))")
+    prueba("recorrido: en el control se enciende el botón de la estación", anillo == 2, f"botón encendido: {anillo}")
 
     titulos_ocultos = pagina.evaluate("""[...document.querySelectorAll('.seccion .titulo')]
         .filter(h => { const r = h.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; })

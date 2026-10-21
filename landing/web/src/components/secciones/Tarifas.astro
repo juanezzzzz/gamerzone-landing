@@ -1,0 +1,94 @@
+---
+// Tarifas: banda oscura con la carta por hora y los paquetes; cada paquete abre WhatsApp con su mensaje.
+import Dato from '../Dato.astro';
+import { TARIFAS, PAQUETES } from '../../data/local';
+import { whatsapp } from '../../lib/sitio';
+---
+<section class="seccion tarifas-banda" id="tarifas" aria-labelledby="t-tarifas">
+  <div class="envoltura tarifas">
+    <div class="tarifas-cabeza">
+      <h2 class="titulo" id="t-tarifas">Tarifas</h2>
+      <p class="entrada">Pagas por el tiempo que juegues, al salir.</p>
+    </div>
+
+    <div class="carta">
+      <p class="carta-rotulo">Por hora</p>
+      <dl class="carta-lista cascada">
+        {TARIFAS.map((t) => (
+          <div class="carta-fila">
+            <dt>{t.que}<span>{t.detalle}</span></dt>
+            <span class="carta-puntos" aria-hidden="true"></span>
+            <dd><Dato pendiente>{t.precio}</Dato></dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="paquetes cascada">
+      {PAQUETES.map((p) => (
+        <article class:list={['paquete', { destacado: p.destacado }]}>
+          {p.destacado && <p class="paquete-sello">El que más conviene</p>}
+          <h3>{p.nombre}</h3>
+          <p class="paquete-precio"><Dato pendiente>{p.precio}</Dato></p>
+          <p class="paquete-ahorro"><Dato pendiente>{p.ahorro}</Dato></p>
+          <ul>{p.incluye.map((i) => <li><Dato pendiente>{i}</Dato></li>)}</ul>
+          <a class="boton paquete-boton" href={whatsapp(`Hola GamerZone, quiero apartar el paquete «${p.nombre}». ¿Para cuándo hay disponibilidad?`)} target="_blank" rel="noopener">Apartar {p.nombre}</a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Banda oscura, como la sala del inicio */
+  .tarifas-banda {
+    position: relative; overflow: hidden; color: var(--texto-noche); border-top: 0;
+    background: radial-gradient(50rem 30rem at 85% 0%, color-mix(in srgb, var(--cian) 10%, transparent), transparent 70%),
+      radial-gradient(40rem 26rem at 0% 100%, color-mix(in srgb, #7b4dff 10%, transparent), transparent 70%), var(--noche);
+  }
+  .tarifas-banda + :global(.seccion) { border-top: 0; }
+  .tarifas-banda .entrada { color: var(--gris-noche); }
+  .tarifas { display: grid; gap: 2.5rem; }
+
+  .carta { padding: 1.75rem; border-radius: 1.25rem; background: color-mix(in srgb, #fff 4%, transparent); border: 1px solid color-mix(in srgb, #fff 9%, transparent); }
+  .carta-rotulo, .paquete-sello { font-size: var(--t-xs); font-weight: 650; font-stretch: 115%; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cian); }
+  .carta-lista { margin: 1rem 0 0; }
+  .carta-fila { display: flex; align-items: baseline; gap: 0.75rem; padding-block: 1rem; }
+  .carta-fila + .carta-fila { border-top: 1px solid color-mix(in srgb, #fff 8%, transparent); }
+  .carta-fila dt { font-weight: 650; font-stretch: 104%; letter-spacing: 0; color: var(--texto-noche); font-size: var(--t-base); }
+  .carta-fila dt span { display: block; font-weight: 400; font-size: var(--t-s); color: var(--gris-noche); margin-top: 0.1rem; }
+  /* Puntos guía, como en la carta de un restaurante */
+  .carta-puntos { flex: 1; min-width: 1rem; border-bottom: 2px dotted color-mix(in srgb, #fff 18%, transparent); transform: translateY(-0.35em); }
+  .carta-fila dd { margin: 0; font: 850 var(--t-l)/1 var(--fd); font-stretch: 115%; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .paquetes { display: grid; gap: 1.25rem; }
+  .paquete {
+    position: relative; display: flex; flex-direction: column; padding: 1.75rem; border-radius: 1.25rem;
+    background: color-mix(in srgb, #fff 4%, transparent); border: 1px solid color-mix(in srgb, #fff 9%, transparent);
+  }
+  .paquete.destacado {
+    background: linear-gradient(160deg, color-mix(in srgb, var(--cian) 16%, #0e1320), #0b0e17);
+    border-color: color-mix(in srgb, var(--cian) 45%, transparent);
+    box-shadow: 0 30px 70px -30px color-mix(in srgb, var(--cian) 45%, transparent);
+  }
+  .paquete h3 { font-size: var(--t-l); margin-top: 0.4rem; }
+  .paquete-sello { margin-bottom: 0.2rem; }
+  .paquete-precio { margin-top: 1rem; font: 850 clamp(2.5rem, 5vw, 3.4rem)/1 var(--fd); font-stretch: 125%; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .paquete-ahorro { margin-top: 0.4rem; color: var(--cian); font-weight: 600; font-size: var(--t-s); }
+  .paquete ul { list-style: none; margin: 1.25rem 0 1.75rem; padding: 0; display: grid; gap: 0.55rem; color: color-mix(in srgb, var(--texto-noche) 82%, transparent); font-size: var(--t-s); }
+  .paquete li { position: relative; padding-left: 1.5rem; }
+  .paquete li::before {
+    content: ''; position: absolute; left: 0.1rem; top: 0.35em; width: 0.75rem; height: 0.42rem;
+    border-left: 2px solid var(--cian); border-bottom: 2px solid var(--cian); transform: rotate(-45deg);
+  }
+  .paquete-boton { margin-top: auto; width: 100%; text-align: center; white-space: nowrap; background: transparent; color: var(--texto-noche); border-color: color-mix(in srgb, #fff 25%, transparent); }
+  .paquete-boton:hover { border-color: var(--cian); }
+  .destacado .paquete-boton { background: var(--cian); color: #04191a; border-color: transparent; }
+  .destacado .paquete-boton:hover { background: #8ef7f7; }
+
+  @media (min-width: 48rem) { .paquetes { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 64rem) {
+    .tarifas { grid-template-columns: 1fr 1.25fr; gap: 2.5rem 3rem; align-items: start; }
+    .tarifas-cabeza { grid-column: 1 / -1; }
+  }
+</style>

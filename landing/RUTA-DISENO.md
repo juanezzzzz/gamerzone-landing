@@ -376,6 +376,24 @@ final se prende el botón central (con zumbido si el sonido está activo). En es
 - **Así de fácil:** números 01–03 en contorno que se rellenan cuando la línea los alcanza; la línea
   avanza con el scroll (vertical en celular, horizontal en escritorio).
 - **Cómo llegar:** horario de la semana en tabla con el día de hoy resaltado en vivo.
-- **Preguntas:** acordeón de tarjetas (una abierta a la vez, apertura suave con `::details-content`
+- **Preguntas:** acordeón de tarjetas (ver abajo)
+
+## 17. Cinco actos, el control como hilo y reservas en un toque (2026-10-21)
+
+- **Orden en cinco actos** (`pages/index.astro`): la sala (inicio) → dónde jugar (estaciones,
+  juegos) → cuánto cuesta (tarifas, así de fácil, planes) → el lugar → la visita (cómo llegar,
+  preguntas, cierre). Las cifras se fundieron en el inicio (4 tipos de puesto, 16+ juegos, 7 días)
+  y se quitaron la franja de cifras y el estado del horario repetido en el inicio.
+  `Informacion.astro` se separó en `Juegos`, `Tarifas` y `Planes`.
+- **El control como hilo:** cada estación es un botón del control (PC = X azul, Consolas = Y
+  amarillo, Fútbol = A verde, Salas = B rojo; `BOTONES` en `data/local.ts`). En el recorrido de
+  escritorio el control aparece en la esquina de la pantalla y se enciende el botón de la estación
+  activa; la barra de progreso usa esos colores y cada tarjeta lleva la letra de su botón. Las
+  posiciones de los botones salen del render 3D (`botones()` en `control3d.ts`).
+- **Reservas en un toque:** `whatsapp(mensaje)` en `lib/sitio.ts`; cada estación («Apartar en PC
+  gamer»), paquete y plan abre WhatsApp con su propio mensaje. Los afiches de planes son enlaces.
+- Pruebas: cifras del inicio, nueve mensajes de WhatsApp distintos y el botón encendido del control.
+
+- **Preguntas (pasada anterior):** acordeón de tarjetas (una abierta a la vez, apertura suave con `::details-content`
   donde el navegador lo soporta) y tarjeta oscura «¿Tu pregunta no está?» fija al lado.
   `data/neon.ts` y `recursos/neon/` siguen para piezas de redes.

@@ -1,7 +1,11 @@
 ---
 import Dato from '../Dato.astro';
 import Video from '../Video.astro';
-import { ESTACIONES } from '../../data/local';
+import { ESTACIONES, BOTONES } from '../../data/local';
+import { whatsapp } from '../../lib/sitio';
+
+const apartar = (nombre: string, puesto: string) =>
+  whatsapp(`Hola GamerZone, quiero apartar un puesto en ${nombre} (puesto ${puesto}). ¿Tienen disponible?`);
 ---
 <section class="seccion" id="estaciones" aria-labelledby="t-estaciones">
   <div class="envoltura">
@@ -12,9 +16,16 @@ import { ESTACIONES } from '../../data/local';
     <!-- Escritorio: pantalla fija que cambia de estación al bajar (efectos/recorrido.ts la activa) -->
     <div class="escenario" aria-hidden="true">
       {ESTACIONES.map((e) => <div class="escenario-capa"><Video clip={e.id} /></div>)}
+      <!-- El control del inicio: el botón de la estación activa se enciende (efectos/recorrido.ts) -->
+      <div class="mando">
+        <img src="/media/control-3d.webp" alt="" width="1575" height="1260" loading="lazy" decoding="async" />
+        {ESTACIONES.map((e) => (
+          <span class="mando-anillo" style={`--b: ${BOTONES[e.boton].color}; left: ${BOTONES[e.boton].x}%; top: ${BOTONES[e.boton].y}%`}></span>
+        ))}
+      </div>
       <div class="escenario-pie">
         <div class="escenario-rotulo"><span class="escenario-num">{ESTACIONES[0].puesto}</span><span class="escenario-nombre">{ESTACIONES[0].nombre}</span></div>
-        <ol class="escenario-progreso">{ESTACIONES.map((e) => <li>{e.nombre}</li>)}</ol>
+        <ol class="escenario-progreso">{ESTACIONES.map((e) => <li style={`--b: ${BOTONES[e.boton].color}`}>{e.nombre}</li>)}</ol>
       </div>
     </div>
 
@@ -23,13 +34,14 @@ import { ESTACIONES } from '../../data/local';
         <article class="estacion" id={e.id} data-puesto={e.puesto} data-nombre={e.nombre}>
           <div class="estacion-media"><Video clip={e.id} auto /></div>
           <div class="estacion-cuerpo">
-            <p class="puesto">Puesto {e.puesto}</p>
+            <p class="puesto"><span class="letra" style={`--b: ${BOTONES[e.boton].color}`} aria-label={`Botón ${e.boton}`}>{e.boton}</span>Puesto {e.puesto}</p>
             <h3>{e.nombre}</h3>
             <p class="estacion-texto">{e.texto}</p>
             <ul class="incluye" aria-label={`Qué incluye ${e.nombre}`}>
               {e.incluye.map((i) => <li><Dato pendiente>{i}</Dato></li>)}
             </ul>
             <p class="precio"><span>Precio</span> <Dato pendiente={e.precio.pendiente}>{e.precio.texto}</Dato></p>
+            <a class="boton boton-principal estacion-cta" href={apartar(e.nombre, e.puesto)} target="_blank" rel="noopener">Apartar en {e.nombre}</a>
           </div>
         </article>
       ))}
@@ -48,7 +60,7 @@ import { ESTACIONES } from '../../data/local';
   .estacion-media :global(video) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .estacion:hover .estacion-media :global(video) { transform: scale(1.03); }
   .estacion-cuerpo { padding: 1.4rem 1.5rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
-  .puesto { font: 750 var(--t-xs)/1 var(--fd); font-stretch: 115%; letter-spacing: 0.06em; color: var(--cian-oscuro); font-variant-numeric: tabular-nums; }
+  .puesto { display: flex; align-items: center; gap: 0.6rem; font: 750 var(--t-xs)/1 var(--fd); font-stretch: 115%; letter-spacing: 0.06em; color: var(--cian-oscuro); font-variant-numeric: tabular-nums; }
   .estacion h3 { font-size: var(--t-l); margin-top: 0.5rem; }
   .estacion-texto { color: var(--gris); margin-top: 0.55rem; max-width: 46ch; }
   .incluye { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: 0.45rem; font-size: var(--t-s); }
@@ -60,6 +72,13 @@ import { ESTACIONES } from '../../data/local';
   }
   .precio { margin-top: 1.25rem; padding-top: 1.1rem; border-top: var(--borde); display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-weight: 650; font-variant-numeric: tabular-nums; }
   .precio span:first-child { font-size: var(--t-xs); font-weight: 600; font-stretch: 108%; letter-spacing: 0.03em; color: var(--gris); }
+  /* La letra del botón del control que corresponde a la estación, con su color */
+  .letra {
+    display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    background: var(--b); color: #07090f; font: 850 0.8rem/1 var(--fd); letter-spacing: 0;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2), 0 0 0 3px color-mix(in srgb, var(--b) 22%, transparent);
+  }
+  .estacion-cta { margin-top: 1.25rem; align-self: flex-start; }
   @media (min-width: 48rem) { .estaciones { grid-template-columns: 1fr 1fr; } }
 
   /* Recorrido de escritorio: pantalla fija a la izquierda, estaciones bajando a la derecha */
@@ -80,12 +99,25 @@ import { ESTACIONES } from '../../data/local';
       position: absolute; inset: auto 0 0; z-index: 5; display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
       padding: 5rem 2rem 1.75rem; color: #fff; background: linear-gradient(to top, rgba(7, 9, 15, 0.82), transparent);
     }
+    /* El control, arriba a la derecha de la pantalla, con un anillo de luz sobre cada botón */
+    .mando {
+      position: absolute; top: 1.25rem; right: 1.25rem; z-index: 5; width: clamp(9rem, 14vw, 12rem);
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
+    }
+    .mando img { display: block; width: 100%; height: auto; }
+    .mando-anillo {
+      position: absolute; width: 11%; aspect-ratio: 1; border-radius: 50%; translate: -50% -50%;
+      border: 2px solid var(--b); opacity: 0; scale: 0.6;
+      box-shadow: 0 0 10px 2px var(--b), inset 0 0 6px var(--b);
+      transition: opacity 0.35s ease, scale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mando-anillo:global(.activo) { opacity: 1; scale: 1; }
     .escenario-rotulo { display: flex; align-items: baseline; gap: 1rem; }
     .escenario-nombre { font: 750 var(--t-m)/1 var(--fd); font-stretch: 115%; text-transform: uppercase; letter-spacing: 0.02em; opacity: 0.85; }
     .escenario-num { display: block; font: 850 clamp(4.5rem, 8vw, 7rem)/0.85 var(--fd); font-stretch: 125%; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
     .escenario-progreso { list-style: none; margin: 0 0 0.4rem; padding: 0; display: flex; gap: 0.4rem; }
     .escenario-progreso li { position: relative; width: 2.25rem; height: 3px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, 0.28); font-size: 0; color: transparent; }
-    .escenario-progreso li::after { content: ''; position: absolute; inset: 0; background: var(--cian); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .escenario-progreso li::after { content: ''; position: absolute; inset: 0; background: var(--b, var(--cian)); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
     .escenario-progreso li:global(.lleno)::after { transform: scaleX(1); }
 
     :global(.recorrido-activo) .estaciones { display: block; }

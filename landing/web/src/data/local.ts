@@ -31,14 +31,25 @@ export const HORARIO = {
   ],
 };
 
+// Cada estación es un botón del control 3D del inicio (mismos colores que en control3d.ts).
+// x/y: dónde cae el botón en public/media/control-3d.webp, en % (los da tools/control3d_poster.mjs).
+export type Boton = 'A' | 'B' | 'X' | 'Y';
+export const BOTONES: Record<Boton, { color: string; x: number; y: number }> = {
+  A: { color: '#2bd97c', x: 64.63, y: 48.81 },
+  B: { color: '#ff4f5e', x: 68.95, y: 43.62 },
+  X: { color: '#4f7bff', x: 60.23, y: 43.67 },
+  Y: { color: '#ffc233', x: 64.53, y: 38.39 },
+};
+
 export const MENSAJE_WA = 'Hola GamerZone, quiero ir a jugar. ¿Tienen puesto disponible?';
 
 export const ESTACIONES: {
-  id: string; puesto: string; nombre: string; texto: string; incluye: string[]; luz: string; precio: Dato;
+  id: string; puesto: string; boton: Boton; nombre: string; texto: string; incluye: string[]; luz: string; precio: Dato;
 }[] = [
   {
     id: 'pc',
     puesto: '07',
+    boton: 'X',
     nombre: 'PC gamer',
     texto: 'Torres con RGB, teclado mecánico y audífonos con micrófono. Para el ranked, el competitivo o jugar con amigos en línea.',
     incluye: ['Monitor de 144 Hz', 'Teclado mecánico y mouse gamer', 'Audífonos con micrófono', 'Steam, Epic y Riot instalados'],
@@ -48,6 +59,7 @@ export const ESTACIONES: {
   {
     id: 'consolas',
     puesto: '11',
+    boton: 'Y',
     nombre: 'Consolas',
     texto: 'Xbox con su biblioteca de juegos y controles listos. Siéntate, escoge el juego y dale.',
     incluye: ['Xbox con Game Pass', 'Dos controles por puesto', 'Pantalla de 50 pulgadas', 'Cooperativo y versus'],
@@ -57,6 +69,7 @@ export const ESTACIONES: {
   {
     id: 'futbol',
     puesto: '03',
+    boton: 'A',
     nombre: 'Fútbol',
     texto: 'El partido en pantalla grande, uno contra uno o dos contra dos. La revancha se cobra el mismo día.',
     incluye: ['EA Sports FC al día', 'Pantalla grande', 'Hasta cuatro jugadores', 'Ligas y equipos actualizados'],
@@ -66,6 +79,7 @@ export const ESTACIONES: {
   {
     id: 'salas',
     puesto: '12',
+    boton: 'B',
     nombre: 'Salas',
     texto: 'Sofá, pantalla grande y espacio para el parche. Para jugar varios a la vez sin estar uno encima del otro.',
     incluye: ['Sofá para cuatro personas', 'Pantalla de 65 pulgadas', 'Consola con cuatro controles', 'Ideal para cumpleaños'],

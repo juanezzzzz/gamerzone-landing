@@ -1,11 +1,13 @@
 ---
+// La página en cinco actos: la sala, dónde jugar, cuánto cuesta, el lugar y la visita.
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/secciones/Cabecera.astro';
 import Inicio from '../components/secciones/Inicio.astro';
-import Cifras from '../components/secciones/Cifras.astro';
 import Estaciones from '../components/secciones/Estaciones.astro';
+import Juegos from '../components/secciones/Juegos.astro';
+import Tarifas from '../components/secciones/Tarifas.astro';
 import Pasos from '../components/secciones/Pasos.astro';
-import Informacion from '../components/secciones/Informacion.astro';
+import Planes from '../components/secciones/Planes.astro';
 import Lugar from '../components/secciones/Lugar.astro';
 import Preguntas from '../components/secciones/Preguntas.astro';
 import Cierre from '../components/secciones/Cierre.astro';
@@ -14,11 +16,16 @@ import Pie from '../components/secciones/Pie.astro';
 <Base>
   <Cabecera />
   <main>
+    <!-- 1. La sala -->
     <Inicio />
-    <Cifras />
+    <!-- 2. Dónde jugar -->
     <Estaciones />
+    <Juegos />
+    <!-- 3. Cuánto cuesta y cómo funciona -->
+    <Tarifas />
     <Pasos />
-    <Informacion />
+    <Planes />
+    <!-- 4. El lugar y 5. la visita -->
     <Lugar />
     <Preguntas />
     <Cierre />

@@ -33,6 +33,7 @@ function cruceta(brazo: number, ancho: number) {
 }
 
 export type Control3D = {
+  botones: () => Record<string, { x: number; y: number }>;
   progreso: (p: number) => void;
   destruir: () => void;
 };
@@ -115,10 +116,12 @@ export async function crearControl3D(
 
   // A, B, X, Y: botones translúcidos con su color; brillan un poco más al encender
   const botones: THREE.MeshPhysicalMaterial[] = [];
-  for (const [x, y, color] of [[136, 106, '#2bd97c'], [146, 96, '#ff4f5e'], [126, 96, '#4f7bff'], [136, 86, '#ffc233']] as const) {
+  const mallasBoton: Record<string, THREE.Mesh> = {};
+  for (const [x, y, color, letra] of [[136, 106, '#2bd97c', 'A'], [146, 96, '#ff4f5e', 'B'], [126, 96, '#4f7bff', 'X'], [136, 86, '#ffc233', 'Y']] as const) {
     const m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.08, emissive: color, emissiveIntensity: 0.12 });
     botones.push(m);
     const b = new THREE.Mesh(new THREE.SphereGeometry(4.7, 40, 20), m);
+    mallasBoton[letra] = b;
     b.scale.set(1, 1, 0.55);
     b.position.copy(en(x, y, FRENTE + 1.2));
     piezas.add(b);
@@ -252,6 +255,15 @@ export async function crearControl3D(
   vista.observe(contenedor);
 
   return {
+    // Dónde cae cada botón de color en el lienzo, en %: lo usa la herramienta de imágenes fijas
+    // para encender botones sobre la imagen del control (recorrido de estaciones).
+    botones() {
+      control.updateMatrixWorld(true);
+      return Object.fromEntries(Object.entries(mallasBoton).map(([letra, m]) => {
+        const v = m.getWorldPosition(new THREE.Vector3()).project(camara);
+        return [letra, { x: +((v.x + 1) * 50).toFixed(2), y: +((1 - v.y) * 50).toFixed(2) }];
+      }));
+    },
     progreso(valor) { p = Math.max(0, Math.min(1, valor)); if (!corriendo && visible) { aplicar(reloj.getElapsed()); renderer.render(escena, camara); } },
     destruir() {
       corriendo = false;
