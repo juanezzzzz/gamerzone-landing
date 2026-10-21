@@ -1,12 +1,7 @@
 ---
 import '../styles/global.css';
 import archivo from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
-import { REVISION, NEGOCIO, HORARIO, JUEGOS, TARIFAS, PLANES, PREGUNTAS, ESTACIONES } from '../data/local';
-
-const pendientes = REVISION
-  ? [NEGOCIO.ciudad, NEGOCIO.direccion, NEGOCIO.whatsapp, NEGOCIO.instagram, HORARIO, JUEGOS, ...ESTACIONES.map((e) => e.precio), ...PLANES]
-      .filter((d) => d.pendiente).length + TARIFAS.length + PREGUNTAS.length + (NEGOCIO.nombrePendiente ? 1 : 0)
-  : 0;
+import { REVISION, NEGOCIO, HORARIO } from '../data/local';
 const titulo = `${NEGOCIO.nombre} · Sala gamer en ${NEGOCIO.ciudad.texto}`;
 const descripcion = 'PC gamer, consolas Xbox, fútbol en pantalla grande y salas para el parche. Escríbenos por WhatsApp o mira cómo llegar.';
 // Absoluta cuando astro.config tenga `site` (el dominio aún no está definido).
@@ -54,7 +49,6 @@ const negocioLocal = {
   {REVISION ? <meta name="robots" content="noindex" /> : <script type="application/ld+json" set:html={JSON.stringify(negocioLocal)} />}
 </head>
 <body>
-  {REVISION && <p class="aviso-revision" role="status">Borrador: {pendientes} datos por confirmar (subrayados)</p>}
   <slot />
   <script>
     import { iniciar } from '../scripts/main';

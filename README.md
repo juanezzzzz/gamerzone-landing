@@ -19,5 +19,6 @@ powershell -File tools/verificar_landing.ps1
 
 Decisiones de diseño, datos pendientes del cliente y cómo regenerar los recursos:
 [`landing/RUTA-DISENO.md`](landing/RUTA-DISENO.md). Los datos del negocio viven en
-`landing/web/src/data/local.ts`; lo no confirmado lleva `pendiente: true` y la página queda en
-borrador (`noindex`) mientras `REVISION = true`.
+`landing/web/src/data/local.ts`. Qué datos son reales y cuáles de referencia:
+[`landing/DATOS-DE-REFERENCIA.md`](landing/DATOS-DE-REFERENCIA.md). La página queda en borrador
+(`noindex`) mientras `REVISION = true`.

@@ -1,7 +1,7 @@
-// Datos del local. Lo que no está confirmado por el negocio va con `pendiente: true` (se ve subrayado
-// en ámbar mientras REVISION sea true). Por ahora la página usa información genérica realista para
-// verse completa; esos valores siguen marcados como pendientes y hay que reemplazarlos por los reales
-// antes de publicar (ver landing/RUTA-DISENO.md §6).
+// Datos del local. Lo que no está confirmado por el negocio va con `pendiente: true` (solo como marca
+// en el código; en la página se ve normal). Por ahora la página usa información de referencia
+// realista para verse completa: la lista de qué es real y qué no está en landing/DATOS-DE-REFERENCIA.md.
+// Mientras REVISION sea true la página lleva noindex y no publica la ficha de negocio para Google.
 
 export const REVISION = true;
 

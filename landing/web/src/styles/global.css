@@ -5,7 +5,6 @@
   /* La sala (solo el inicio) */
   --noche: #07090f;
   --cian: #52f2f2;          /* el logo */
-  --pintura: #d97e18;       /* los números pintados en la pared (muestreado del «11», v3) */
   --texto-noche: #edeff5;
   --gris-noche: #9aa1b5;
 
@@ -16,7 +15,6 @@
   --gris: #545e6b;
   --linea: #dde2e9;
   --cian-oscuro: #0a7a85;   /* el cian del logo con contraste AA sobre blanco */
-  --ambar: #b45f0b;         /* números de puesto sobre fondo claro */
 
   /* Una sola familia, Archivo, con dos anchos: expandida y pesada para títulos (el tono de una
      transmisión de esports), normal para leer. */
@@ -89,19 +87,6 @@ dt, .rotulo { font-size: var(--t-xs); font-weight: 600; font-stretch: 108%; lett
 .boton-principal:hover { background: #283240; }
 .boton-secundario { border-color: var(--linea); color: var(--tinta); background: var(--blanco); }
 .boton-secundario:hover { border-color: var(--tinta); }
-
-/* Datos por confirmar (solo en revisión) */
-.pendiente {
-  text-decoration: underline dashed var(--pintura) 1.5px;
-  text-underline-offset: 0.25em;
-  cursor: help;
-}
-.aviso-revision {
-  position: fixed; left: 1rem; bottom: calc(var(--barra-movil) + 0.75rem); z-index: 60;
-  font: 500 var(--t-xs)/1.2 var(--ft);
-  background: var(--pintura); color: #1d1300;
-  padding: 0.45rem 0.7rem; border-radius: 0.4rem;
-}
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 

@@ -48,9 +48,9 @@ import { WA, FILAS_HORARIO } from '../../lib/sitio';
   .estado { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; font-size: var(--t-xs); font-weight: 500; white-space: nowrap; opacity: 0.85; font-variant-numeric: tabular-nums; }
   .estado-punto { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: currentColor; opacity: 0.5; }
   :global(.estado.abierto) .estado-punto { background: #1fbf6a; opacity: 1; box-shadow: 0 0 0 4px color-mix(in srgb, #1fbf6a 22%, transparent); }
-  /* Última hora antes de cerrar o de abrir: el punto pasa a ámbar y respira */
-  :global(.estado.pronto) .estado-punto { background: var(--pintura); opacity: 1; box-shadow: 0 0 0 4px color-mix(in srgb, var(--pintura) 25%, transparent); animation: respira 2s ease-in-out infinite; }
-  @keyframes respira { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--pintura) 8%, transparent); } }
+  /* Última hora antes de cerrar o de abrir: el punto pasa a cian y respira */
+  :global(.estado.pronto) .estado-punto { background: var(--cian-oscuro); opacity: 1; box-shadow: 0 0 0 4px color-mix(in srgb, var(--cian-oscuro) 25%, transparent); animation: respira 2s ease-in-out infinite; }
+  @keyframes respira { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--cian-oscuro) 8%, transparent); } }
 
   .cabecera-wa { display: none; background: var(--cian); color: #04191a; }
   :global(.cabecera.clara) .cabecera-wa { background: var(--tinta); color: #fff; }

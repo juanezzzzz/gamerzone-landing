@@ -98,11 +98,10 @@ with sync_playwright() as p:
     prueba("accesibilidad: enlaces y botones con nombre", not sin_nombre, "; ".join(sin_nombre))
 
     prueba("meta: imagen para compartir", pagina.evaluate("!!document.querySelector('meta[property=\"og:image\"][content$=\"/media/og.jpg\"]')"))
-    revision = pagina.evaluate("!!document.querySelector('.aviso-revision')")
     noindex = pagina.evaluate("!!document.querySelector('meta[name=robots][content=noindex]')")
     ficha = pagina.evaluate("!!document.querySelector('script[type=\"application/ld+json\"]')")
-    prueba("meta: borrador con noindex y sin ficha; publicado con ficha y sin noindex",
-           (revision and noindex and not ficha) or (not revision and not noindex and ficha))
+    prueba("meta: borrador con noindex y sin ficha, o publicado con ficha y sin noindex", noindex != ficha)
+    prueba("datos de referencia sin marcas visuales", pagina.locator(".pendiente, .aviso-revision").count() == 0)
 
     prueba("pasos: tres, en orden", pagina.locator("#como-funciona .paso").count() == 3)
     bajar_a(pagina, ".galeria", -200)
