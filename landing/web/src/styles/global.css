@@ -1,0 +1,110 @@
+@import '@fontsource-variable/archivo/wdth.css';
+
+/* GamerZone — el inicio es la sala a oscuras con el control que se enciende; el resto es información clara. */
+:root {
+  /* La sala (solo el inicio) */
+  --noche: #07090f;
+  --cian: #52f2f2;          /* el logo */
+  --pintura: #d97e18;       /* los números pintados en la pared (muestreado del «11», v3) */
+  --texto-noche: #edeff5;
+  --gris-noche: #9aa1b5;
+
+  /* La página */
+  --papel: #f2f4f7;
+  --blanco: #ffffff;
+  --tinta: #10151c;
+  --gris: #545e6b;
+  --linea: #dde2e9;
+  --cian-oscuro: #0a7a85;   /* el cian del logo con contraste AA sobre blanco */
+  --ambar: #b45f0b;         /* números de puesto sobre fondo claro */
+
+  /* Una sola familia, Archivo, con dos anchos: expandida y pesada para títulos (el tono de una
+     transmisión de esports), normal para leer. */
+  --fd: 'Archivo Variable', system-ui, sans-serif;
+  --ft: 'Archivo Variable', system-ui, sans-serif;
+  --ancho-titulo: 120%;
+
+  /* Escala de tercera mayor (1,25) sobre 17 px */
+  --t-xs: 0.8125rem;
+  --t-s: 0.9375rem;
+  --t-base: 1.0625rem;
+  --t-m: 1.3125rem;
+  --t-l: 1.625rem;
+  --t-xl: clamp(2.25rem, 5.2vw, 3.9rem);
+  --t-xxl: clamp(2.75rem, 10.5vw, 6.5rem);
+  --borde: 1px solid var(--linea);
+  --radio: 1rem;
+  --sombra: 0 1px 2px rgba(16, 21, 28, 0.05), 0 8px 24px -12px rgba(16, 21, 28, 0.12);
+  --ancho: 72rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --barra-movil: 4.5rem;   /* alto de la barra fija de contacto en celular */
+}
+@media (min-width: 64rem) { :root { --barra-movil: 0px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font: 400 var(--t-base)/1.6 var(--ft);
+  font-stretch: 106%;   /* Archivo es algo estrecha en su ancho normal; así respira al leer */
+  letter-spacing: 0.003em;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: var(--barra-movil);
+}
+img, video { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+h1, h2, h3 {
+  margin: 0; font-family: var(--fd); font-weight: 800; font-stretch: var(--ancho-titulo);
+  line-height: 1.04; letter-spacing: -0.02em; text-wrap: balance;
+}
+p { margin: 0; text-wrap: pretty; }
+/* Rótulos pequeños: un poco más anchos y espaciados para que se lean a ese tamaño */
+dt, .rotulo { font-size: var(--t-xs); font-weight: 600; font-stretch: 108%; letter-spacing: 0.03em; color: var(--gris); }
+.cifras { font-variant-numeric: tabular-nums; }
+
+:focus-visible { outline: 2px solid var(--cian-oscuro); outline-offset: 3px; border-radius: 4px; }
+
+.envoltura { width: min(100% - 2 * var(--gutter), var(--ancho)); margin-inline: auto; }
+.seccion { padding-block: clamp(4rem, 9vw, 7rem); }
+.seccion + .seccion { border-top: var(--borde); }
+.titulo { font-size: var(--t-xl); max-width: 18ch; }
+.botones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.6rem; }
+.entrada { color: var(--gris); max-width: 50ch; margin-top: 0.9rem; font-size: var(--t-m); line-height: 1.5; }
+
+/* Botones */
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem;
+  min-height: 3rem; padding: 0.75rem 1.35rem;
+  font: 650 1rem/1 var(--ft); font-stretch: 106%; letter-spacing: 0.005em; text-decoration: none;
+  border-radius: 0.6rem; border: 1px solid transparent;
+  transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+.boton svg { width: 1.2rem; height: 1.2rem; flex: none; }
+.boton:active { transform: translateY(1px); }
+.boton-principal { background: var(--tinta); color: #fff; }
+.boton-principal:hover { background: #283240; }
+.boton-secundario { border-color: var(--linea); color: var(--tinta); background: var(--blanco); }
+.boton-secundario:hover { border-color: var(--tinta); }
+
+/* Datos por confirmar (solo en revisión) */
+.pendiente {
+  text-decoration: underline dashed var(--pintura) 1.5px;
+  text-underline-offset: 0.25em;
+  cursor: help;
+}
+.aviso-revision {
+  position: fixed; left: 1rem; bottom: calc(var(--barra-movil) + 0.75rem); z-index: 60;
+  font: 500 var(--t-xs)/1.2 var(--ft);
+  background: var(--pintura); color: #1d1300;
+  padding: 0.45rem 0.7rem; border-radius: 0.4rem;
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

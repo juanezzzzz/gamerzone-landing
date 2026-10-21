@@ -1,0 +1,73 @@
+---
+import { Picture } from 'astro:assets';
+import logo from '../../assets/logo.png';
+import Dato from '../Dato.astro';
+import WhatsAppIcon from '../WhatsAppIcon.astro';
+import { NEGOCIO, HORARIO } from '../../data/local';
+import { WA, FILAS_HORARIO } from '../../lib/sitio';
+---
+<header class="cabecera">
+  <div class="envoltura cabecera-fila">
+    <a class="marca" href="#inicio" aria-label={`${NEGOCIO.nombre}, ir al inicio`}>
+      <Picture src={logo} formats={['avif']} fallbackFormat="webp" width={44} height={44} densities={[1, 2]} alt="" loading="eager" />
+      <span class="marca-nombre"><Dato pendiente={NEGOCIO.nombrePendiente}>{NEGOCIO.nombre}</Dato></span>
+    </a>
+    <p class="estado" id="estado" data-estado data-horario={JSON.stringify(HORARIO.dias)}>
+      <span class="estado-punto" aria-hidden="true"></span>
+      <Dato pendiente={HORARIO.pendiente}><span id="estado-texto" data-estado-texto>{FILAS_HORARIO[0].rango}</span></Dato>
+    </p>
+    <button class="boton-sonido" id="sonido" type="button" aria-pressed="false" aria-label="Sonido del control al encenderse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/>
+        <path class="sonido-off" d="M22 9l-6 6M16 9l6 6"/>
+        <path class="sonido-on" d="M16 9a5 5 0 0 1 0 6M19.364 18.364a9 9 0 0 0 0-12.728"/>
+      </svg>
+    </button>
+    <a class="boton boton-principal cabecera-wa" href={WA} target="_blank" rel="noopener"><WhatsAppIcon /> Escríbenos</a>
+  </div>
+  <span class="progreso-pagina" aria-hidden="true"></span>
+</header>
+
+<style>
+  /* Oscura translúcida sobre la sala; blanca desde que empieza la información (la cambia el script) */
+  .cabecera {
+    position: fixed; inset: 0 0 auto; z-index: 40; padding-block: 0.7rem;
+    color: var(--texto-noche); border-bottom: 1px solid transparent;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  :global(.cabecera.con-fondo) { background: color-mix(in srgb, var(--noche) 85%, transparent); backdrop-filter: blur(12px); border-bottom-color: color-mix(in srgb, var(--texto-noche) 8%, transparent); }
+  :global(.cabecera.clara) { background: color-mix(in srgb, var(--blanco) 90%, transparent); backdrop-filter: blur(12px); color: var(--tinta); border-bottom-color: var(--linea); }
+  .cabecera-fila { display: flex; align-items: center; gap: 0.75rem; }
+  .progreso-pagina { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--cian); transform: scaleX(0); transform-origin: left; }
+  :global(.cabecera.clara) .progreso-pagina { background: var(--cian-oscuro); }
+
+  .marca { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font: 800 1.125rem/1 var(--fd); font-stretch: 125%; letter-spacing: 0.01em; text-transform: uppercase; }
+  .marca :global(img) { display: block; width: 44px; height: 44px; object-fit: contain; }
+  @media (max-width: 29.99rem) { .marca-nombre { display: none; } }
+
+  .estado { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; font-size: var(--t-xs); font-weight: 500; white-space: nowrap; opacity: 0.85; font-variant-numeric: tabular-nums; }
+  .estado-punto { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: currentColor; opacity: 0.5; }
+  :global(.estado.abierto) .estado-punto { background: #1fbf6a; opacity: 1; box-shadow: 0 0 0 4px color-mix(in srgb, #1fbf6a 22%, transparent); }
+  /* Última hora antes de cerrar o de abrir: el punto pasa a ámbar y respira */
+  :global(.estado.pronto) .estado-punto { background: var(--pintura); opacity: 1; box-shadow: 0 0 0 4px color-mix(in srgb, var(--pintura) 25%, transparent); animation: respira 2s ease-in-out infinite; }
+  @keyframes respira { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--pintura) 8%, transparent); } }
+
+  .cabecera-wa { display: none; background: var(--cian); color: #04191a; }
+  :global(.cabecera.clara) .cabecera-wa { background: var(--tinta); color: #fff; }
+
+  .boton-sonido {
+    display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; flex: none;
+    border-radius: 0.6rem; border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    background: transparent; color: inherit; cursor: pointer; opacity: 0.8;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+  }
+  .boton-sonido:hover, .boton-sonido[aria-pressed='true'] { opacity: 1; border-color: currentColor; }
+  .boton-sonido svg { width: 1.15rem; height: 1.15rem; }
+  .boton-sonido .sonido-on, .boton-sonido[aria-pressed='true'] .sonido-off { display: none; }
+  .boton-sonido[aria-pressed='true'] .sonido-on { display: inline; }
+
+  @media (min-width: 64rem) {
+    .cabecera-wa { display: inline-flex; min-height: 2.6rem; padding-block: 0.55rem; }
+    .estado { margin-right: 0.5rem; }
+  }
+</style>

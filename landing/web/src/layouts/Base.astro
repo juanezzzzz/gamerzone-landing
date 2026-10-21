@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import archivo from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import { REVISION, NEGOCIO, HORARIO, JUEGOS, TARIFAS, PLANES, PREGUNTAS, ESTACIONES } from '../data/local';
+
+const pendientes = REVISION
+  ? [NEGOCIO.ciudad, NEGOCIO.direccion, NEGOCIO.whatsapp, NEGOCIO.instagram, HORARIO, JUEGOS, ...ESTACIONES.map((e) => e.precio), ...PLANES]
+      .filter((d) => d.pendiente).length + TARIFAS.length + PREGUNTAS.length + (NEGOCIO.nombrePendiente ? 1 : 0)
+  : 0;
+const titulo = `${NEGOCIO.nombre} · Sala gamer en ${NEGOCIO.ciudad.texto}`;
+const descripcion = 'PC gamer, consolas Xbox, fútbol en pantalla grande y salas para el parche. Escríbenos por WhatsApp o mira cómo llegar.';
+// Absoluta cuando astro.config tenga `site` (el dominio aún no está definido).
+const imagen = new URL('/media/og.jpg', Astro.site ?? Astro.url).href;
+
+// Ficha de negocio local para Google. Solo se publica con los datos confirmados (REVISION = false):
+// mandar «[Dirección del local]» a un buscador es peor que no mandar nada.
+const DIAS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const hh = (h: number) => `${String(h).padStart(2, '0')}:00`;
+const negocioLocal = {
+  '@context': 'https://schema.org',
+  '@type': 'EntertainmentBusiness',
+  name: NEGOCIO.nombreLargo,
+  description: descripcion,
+  image: imagen,
+  telephone: `+${NEGOCIO.whatsapp.numero}`,
+  address: { '@type': 'PostalAddress', streetAddress: NEGOCIO.direccion.texto, addressLocality: NEGOCIO.ciudad.texto, addressCountry: 'CO' },
+  openingHoursSpecification: HORARIO.dias.map((d) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: DIAS[d.dia], opens: hh(d.abre), closes: hh(d.cierra) })),
+};
+---
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{titulo}</title>
+  <meta name="description" content={descripcion} />
+  <meta name="theme-color" content="#07090f" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <!-- El navegador solo descubre la fuente al leer el CSS; así arranca su descarga desde el principio -->
+  <link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />
+  <!-- Los pósters los pone el script al acercarse (base/videos.ts); sin script queda este fondo oscuro -->
+
+  <noscript><style>video[data-poster] { background: #0b0d12; }</style></noscript>
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_CO" />
+  <meta property="og:title" content={titulo} />
+  <meta property="og:description" content={descripcion} />
+  <meta property="og:image" content={imagen} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Letrero de neón de GamerZone con Pac-Man, fantasmas y un control, y el título ¿Listo para jugar?" />
+  <meta name="twitter:card" content="summary_large_image" />
+  {REVISION ? <meta name="robots" content="noindex" /> : <script type="application/ld+json" set:html={JSON.stringify(negocioLocal)} />}
+</head>
+<body>
+  {REVISION && <p class="aviso-revision" role="status">Borrador: {pendientes} datos por confirmar (subrayados)</p>}
+  <slot />
+  <script>
+    import { iniciar } from '../scripts/main';
+    iniciar();
+  </script>
+</body>
+</html>

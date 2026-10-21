@@ -1,0 +1,17 @@
+---
+// Clip en bucle del local: AV1 primero (más liviano), H.264 de respaldo. Nunca suena ni se descarga antes
+// de tiempo; ni siquiera el póster, que lo pone base/videos.ts cuando el video se acerca a la pantalla.
+interface Props { clip: string; auto?: boolean; etiqueta?: string; class?: string }
+const { clip, auto = false, etiqueta, class: clase } = Astro.props;
+---
+<video
+  class={clase}
+  data-auto={auto ? '' : undefined}
+  data-poster={`/media/clips/${clip}.webp`}
+  muted loop playsinline preload="none"
+  aria-label={etiqueta}
+  aria-hidden={etiqueta ? undefined : 'true'}
+>
+  <source src={`/media/clips/${clip}.webm`} type='video/webm; codecs="av01.0.05M.08"' />
+  <source src={`/media/clips/${clip}.mp4`} type="video/mp4" />
+</video>

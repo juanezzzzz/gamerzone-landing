@@ -1,0 +1,56 @@
+---
+// Pie y barra fija de contacto en celular.
+import { Picture } from 'astro:assets';
+import logo from '../../assets/logo.png';
+import Dato from '../Dato.astro';
+import WhatsAppIcon from '../WhatsAppIcon.astro';
+import { NEGOCIO } from '../../data/local';
+import { WA } from '../../lib/sitio';
+---
+<footer class="pie">
+  <div class="envoltura pie-grilla">
+    <div class="pie-marca">
+      <Picture src={logo} formats={['avif']} fallbackFormat="webp" width={64} height={64} densities={[1, 2]} alt="" loading="lazy" />
+      <p><strong>{NEGOCIO.nombreLargo}</strong><span><Dato pendiente={NEGOCIO.direccion.pendiente}>{NEGOCIO.direccion.texto}</Dato>, {NEGOCIO.ciudad.texto}</span></p>
+    </div>
+    <nav class="pie-nav" aria-label="Secciones">
+      <a href="#estaciones">Estaciones</a>
+      <a href="#juegos">Juegos</a>
+      <a href="#tarifas">Tarifas</a>
+      <a href="#planes">Planes</a>
+      <a href="#visitanos">Cómo llegar</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <p class="credito"><Dato pendiente>Sitio hecho por Zyvo</Dato></p>
+  </div>
+</footer>
+
+<nav class="barra-movil" aria-label="Contacto rápido">
+  <a class="boton boton-principal" href={WA} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp</a>
+  <a class="boton boton-secundario" href={NEGOCIO.mapa} target="_blank" rel="noopener">Cómo llegar</a>
+</nav>
+
+<style>
+  .pie { padding-block: 0.5rem calc(2.5rem + var(--barra-movil)); color: var(--gris); font-size: var(--t-s); }
+  .pie-grilla { display: grid; gap: 1.75rem; align-items: center; padding-top: 2rem; border-top: var(--borde); }
+  .pie-marca { display: flex; align-items: center; gap: 1rem; }
+  .pie-marca :global(img) { display: block; width: 56px; height: 56px; object-fit: contain; }
+  .pie-marca strong { display: block; color: var(--tinta); font-weight: 700; font-stretch: 112%; }
+  .pie-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+  .pie-nav a { text-decoration: none; padding-block: 0.4rem; color: var(--tinta); font-weight: 550; }
+  .pie-nav a:hover { color: var(--cian-oscuro); }
+  @media (min-width: 64rem) {
+    .pie-grilla { grid-template-columns: auto 1fr auto; gap: 3rem; }
+    .pie-nav { justify-content: center; }
+  }
+
+  .barra-movil {
+    position: fixed; inset: auto 0 0; z-index: 50;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 0.6rem;
+    padding: 0.7rem var(--gutter) calc(0.7rem + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--blanco) 92%, transparent); backdrop-filter: blur(12px);
+    border-top: var(--borde);
+  }
+
+  @media (min-width: 64rem) { .barra-movil { display: none; } }
+</style>

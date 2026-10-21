@@ -1,0 +1,195 @@
+---
+// Juegos, tarifas y planes en grupo: la parte de consulta rápida, cada una con su propia composición.
+import { Picture } from 'astro:assets';
+import Dato from '../Dato.astro';
+import Video from '../Video.astro';
+import { JUEGOS, TARIFAS, PAQUETES, PLANES } from '../../data/local';
+import { WA } from '../../lib/sitio';
+
+const corte = Math.ceil(JUEGOS.lista.length / 2);
+const mitades = [JUEGOS.lista.slice(0, corte), JUEGOS.lista.slice(corte)];
+
+const fotos = Object.fromEntries(
+  Object.entries(import.meta.glob<{ default: ImageMetadata }>('../../assets/galeria/*.webp', { eager: true })).map(([k, v]) => [k, v.default]),
+);
+---
+<section class="seccion" id="juegos" aria-labelledby="t-juegos">
+  <div class="envoltura juegos">
+    <div class="juegos-texto">
+      <h2 class="titulo" id="t-juegos">Algunos de los juegos</h2>
+      <p class="entrada"><Dato pendiente={JUEGOS.pendiente}>Vistos en la biblioteca de las consolas.</Dato> Si buscas uno en particular, pregúntanos por WhatsApp.</p>
+    </div>
+    <figure class="pantalla">
+      <div class="pantalla-marco">
+        <Video clip="juegos" auto etiqueta="La biblioteca de juegos de la Xbox del local: Forza Horizon 5, Gang Beasts, Halo Infinite, Hitman" />
+      </div>
+      <figcaption>La biblioteca de la Xbox del local.</figcaption>
+    </figure>
+  </div>
+  <!-- Marquesina: dos filas de títulos en sentidos opuestos. La lista accesible va aparte. -->
+  <div class="marquesina" aria-hidden="true">
+    {[mitades[0], mitades[1]].map((fila, n) => (
+      <div class:list={['marquesina-fila', { inversa: n === 1 }]}>
+        {[0, 1].map(() => (
+          <span class="marquesina-grupo">{fila.map((j) => <span class="marquesina-juego">{j}</span>)}</span>
+        ))}
+      </div>
+    ))}
+  </div>
+  <ul class="sr-only">{JUEGOS.lista.map((j) => <li>{j}</li>)}</ul>
+</section>
+
+<!-- Tarifas: banda oscura con la carta por hora y los paquetes -->
+<section class="seccion tarifas-banda" id="tarifas" aria-labelledby="t-tarifas">
+  <div class="envoltura tarifas">
+    <div class="tarifas-cabeza">
+      <h2 class="titulo" id="t-tarifas">Tarifas</h2>
+      <p class="entrada">Pagas por el tiempo que juegues, al salir.</p>
+    </div>
+
+    <div class="carta">
+      <p class="carta-rotulo">Por hora</p>
+      <dl class="carta-lista cascada">
+        {TARIFAS.map((t) => (
+          <div class="carta-fila">
+            <dt>{t.que}<span>{t.detalle}</span></dt>
+            <span class="carta-puntos" aria-hidden="true"></span>
+            <dd><Dato pendiente>{t.precio}</Dato></dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="paquetes cascada">
+      {PAQUETES.map((p) => (
+        <article class:list={['paquete', { destacado: p.destacado }]}>
+          {p.destacado && <p class="paquete-sello">El que más conviene</p>}
+          <h3>{p.nombre}</h3>
+          <p class="paquete-precio"><Dato pendiente>{p.precio}</Dato></p>
+          <p class="paquete-ahorro"><Dato pendiente>{p.ahorro}</Dato></p>
+          <ul>{p.incluye.map((i) => <li><Dato pendiente>{i}</Dato></li>)}</ul>
+          <a class="boton paquete-boton" href={WA} target="_blank" rel="noopener">Apartar por WhatsApp</a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="planes" aria-labelledby="t-planes">
+  <div class="envoltura">
+    <h2 class="titulo" id="t-planes">Planes en grupo</h2>
+  </div>
+  <div class="envoltura planes cascada">
+    {PLANES.map((p) => (
+      <article class="plan">
+        <Picture src={fotos[`../../assets/galeria/${p.foto}.webp`]} formats={['avif']} fallbackFormat="webp" widths={[400, 640]} sizes="(min-width: 48rem) 24rem, 100vw" loading="lazy" alt={p.alt} />
+        <div class="plan-cuerpo">
+          <h3>{p.titulo}</h3>
+          <p><Dato pendiente={p.pendiente}>{p.texto}</Dato></p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* Juegos: la lista junto a la pantalla real */
+  .juegos { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .pantalla { margin: 0; }
+
+  /* Marquesina de títulos: contorno arriba, relleno abajo, en sentidos opuestos */
+  .marquesina { margin-top: clamp(2.5rem, 6vw, 4.5rem); display: grid; gap: 0.25rem; overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquesina-fila { display: flex; width: max-content; animation: desliza 60s linear infinite; }
+  .marquesina-fila.inversa { animation-direction: reverse; animation-duration: 70s; }
+  .marquesina-grupo { display: flex; }
+  .marquesina-juego {
+    display: flex; align-items: center; gap: 0.6em; padding-right: 0.6em; white-space: nowrap;
+    font: 850 clamp(2.4rem, 7vw, 5.5rem)/1.05 var(--fd); font-stretch: 125%; letter-spacing: -0.03em; text-transform: uppercase;
+    color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--tinta) 32%, transparent);
+  }
+  .marquesina-juego::after { content: ''; width: 0.18em; height: 0.18em; border-radius: 50%; background: var(--cian-oscuro); }
+  .inversa .marquesina-juego { color: var(--tinta); -webkit-text-stroke: 0; }
+  .marquesina:hover .marquesina-fila { animation-play-state: paused; }
+  @keyframes desliza { to { transform: translateX(-50%); } }
+  .pantalla-marco {
+    padding: 0.75rem; border-radius: 1.5rem;
+    background: linear-gradient(160deg, #23263a, #0d0f18);
+    box-shadow: 0 40px 80px -40px rgba(16, 21, 28, 0.55);
+  }
+  .pantalla-marco :global(video) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 0.9rem; background: #0b0d12; }
+  .pantalla figcaption { margin-top: 0.75rem; color: var(--gris); font-size: var(--t-s); }
+
+  /* Tarifas: banda oscura, como la sala del inicio */
+  .tarifas-banda {
+    position: relative; overflow: hidden; color: var(--texto-noche); border-top: 0;
+    background: radial-gradient(50rem 30rem at 85% 0%, color-mix(in srgb, var(--cian) 10%, transparent), transparent 70%),
+      radial-gradient(40rem 26rem at 0% 100%, color-mix(in srgb, #7b4dff 10%, transparent), transparent 70%), var(--noche);
+  }
+  .tarifas-banda + :global(.seccion) { border-top: 0; }
+  .tarifas-banda .entrada { color: var(--gris-noche); }
+  .tarifas { display: grid; gap: 2.5rem; }
+
+  .carta { padding: 1.75rem; border-radius: 1.25rem; background: color-mix(in srgb, #fff 4%, transparent); border: 1px solid color-mix(in srgb, #fff 9%, transparent); }
+  .carta-rotulo, .paquete-sello { font-size: var(--t-xs); font-weight: 650; font-stretch: 115%; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cian); }
+  .carta-lista { margin: 1rem 0 0; }
+  .carta-fila { display: flex; align-items: baseline; gap: 0.75rem; padding-block: 1rem; }
+  .carta-fila + .carta-fila { border-top: 1px solid color-mix(in srgb, #fff 8%, transparent); }
+  .carta-fila dt { font-weight: 650; font-stretch: 104%; letter-spacing: 0; color: var(--texto-noche); font-size: var(--t-base); }
+  .carta-fila dt span { display: block; font-weight: 400; font-size: var(--t-s); color: var(--gris-noche); margin-top: 0.1rem; }
+  /* Puntos guía, como en la carta de un restaurante */
+  .carta-puntos { flex: 1; min-width: 1rem; border-bottom: 2px dotted color-mix(in srgb, #fff 18%, transparent); transform: translateY(-0.35em); }
+  .carta-fila dd { margin: 0; font: 850 var(--t-l)/1 var(--fd); font-stretch: 115%; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .paquetes { display: grid; gap: 1.25rem; }
+  .paquete {
+    position: relative; display: flex; flex-direction: column; padding: 1.75rem; border-radius: 1.25rem;
+    background: color-mix(in srgb, #fff 4%, transparent); border: 1px solid color-mix(in srgb, #fff 9%, transparent);
+  }
+  .paquete.destacado {
+    background: linear-gradient(160deg, color-mix(in srgb, var(--cian) 16%, #0e1320), #0b0e17);
+    border-color: color-mix(in srgb, var(--cian) 45%, transparent);
+    box-shadow: 0 30px 70px -30px color-mix(in srgb, var(--cian) 45%, transparent);
+  }
+  .paquete h3 { font-size: var(--t-l); margin-top: 0.4rem; }
+  .paquete-sello { margin-bottom: 0.2rem; }
+  .paquete-precio { margin-top: 1rem; font: 850 clamp(2.5rem, 5vw, 3.4rem)/1 var(--fd); font-stretch: 125%; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .paquete-ahorro { margin-top: 0.4rem; color: var(--cian); font-weight: 600; font-size: var(--t-s); }
+  .paquete ul { list-style: none; margin: 1.25rem 0 1.75rem; padding: 0; display: grid; gap: 0.55rem; color: color-mix(in srgb, var(--texto-noche) 82%, transparent); font-size: var(--t-s); }
+  .paquete li { position: relative; padding-left: 1.5rem; }
+  .paquete li::before {
+    content: ''; position: absolute; left: 0.1rem; top: 0.35em; width: 0.75rem; height: 0.42rem;
+    border-left: 2px solid var(--cian); border-bottom: 2px solid var(--cian); transform: rotate(-45deg);
+  }
+  .paquete-boton { margin-top: auto; width: 100%; text-align: center; white-space: nowrap; background: transparent; color: var(--texto-noche); border-color: color-mix(in srgb, #fff 25%, transparent); }
+  .paquete-boton:hover { border-color: var(--cian); }
+  .destacado .paquete-boton { background: var(--cian); color: #04191a; border-color: transparent; }
+  .destacado .paquete-boton:hover { background: #8ef7f7; }
+
+  /* Planes: afiches verticales con la foto real a sangre y el texto sobre una sombra */
+  .planes { display: grid; gap: 1.25rem; margin-top: 2.25rem; }
+  .plan {
+    position: relative; isolation: isolate; aspect-ratio: 4 / 5; border-radius: var(--radio); overflow: hidden;
+    background: #0b0d12; color: var(--texto-noche); box-shadow: 0 30px 60px -30px rgba(16, 21, 28, 0.6);
+  }
+  .plan :global(picture), .plan :global(img) { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+  .plan:hover :global(img) { transform: scale(1.05); }
+  .plan::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(to top, rgba(7, 9, 15, 0.95) 0%, rgba(7, 9, 15, 0.7) 35%, rgba(7, 9, 15, 0) 65%);
+  }
+  .plan-cuerpo { position: absolute; inset: auto 0 0; padding: 1.5rem 1.5rem 1.75rem; }
+  .plan h3 { font-size: var(--t-l); }
+  .plan p { color: color-mix(in srgb, var(--texto-noche) 78%, transparent); margin-top: 0.5rem; font-size: var(--t-s); }
+
+  @media (min-width: 48rem) {
+    .paquetes { grid-template-columns: 1fr 1fr; }
+    .planes { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 64rem) {
+    .juegos { grid-template-columns: 0.95fr 1.05fr; }
+    .tarifas { grid-template-columns: 1fr 1.25fr; gap: 2.5rem 3rem; align-items: start; }
+    .tarifas-cabeza { grid-column: 1 / -1; }
+  }
+</style>

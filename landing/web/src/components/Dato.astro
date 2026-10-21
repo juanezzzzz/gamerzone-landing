@@ -1,0 +1,9 @@
+---
+// Un dato del negocio. Si está pendiente (y REVISION es true) se marca para revisarlo.
+import { REVISION } from '../data/local';
+
+interface Props { pendiente?: boolean; tag?: 'span' | 'p' | 'strong' }
+const { pendiente = false, tag: Tag = 'span' } = Astro.props;
+const marcar = REVISION && pendiente;
+---
+<Tag class:list={[{ pendiente: marcar }]} title={marcar ? 'Dato por confirmar con el negocio' : undefined}><slot /></Tag>

@@ -1,0 +1,19 @@
+# Lista blanca: solo la landing, las herramientas y la guía de diseño.
+# Los videos maestros, renders y proyectos de video (cientos de MB) quedan fuera.
+/*
+!/.gitignore
+!/README.md
+!/landing/
+/landing/*
+!/landing/web/
+!/landing/RUTA-DISENO.md
+!/tools/
+
+node_modules/
+dist/
+.astro/
+.venv/
+__pycache__/
+*.log
+.env
+.env.*

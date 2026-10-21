@@ -1,0 +1,105 @@
+---
+import Dato from '../Dato.astro';
+import Video from '../Video.astro';
+import { ESTACIONES } from '../../data/local';
+---
+<section class="seccion" id="estaciones" aria-labelledby="t-estaciones">
+  <div class="envoltura">
+    <h2 class="titulo" id="t-estaciones">Escoge dónde jugar</h2>
+    <p class="entrada">Cuatro tipos de puesto en el mismo lugar. Los videos son del local.</p>
+  </div>
+  <div class="envoltura recorrido">
+    <!-- Escritorio: pantalla fija que cambia de estación al bajar (efectos/recorrido.ts la activa) -->
+    <div class="escenario" aria-hidden="true">
+      {ESTACIONES.map((e) => <div class="escenario-capa"><Video clip={e.id} /></div>)}
+      <div class="escenario-pie">
+        <div class="escenario-rotulo"><span class="escenario-num">{ESTACIONES[0].puesto}</span><span class="escenario-nombre">{ESTACIONES[0].nombre}</span></div>
+        <ol class="escenario-progreso">{ESTACIONES.map((e) => <li>{e.nombre}</li>)}</ol>
+      </div>
+    </div>
+
+    <div class="estaciones">
+      {ESTACIONES.map((e) => (
+        <article class="estacion" id={e.id} data-puesto={e.puesto} data-nombre={e.nombre}>
+          <div class="estacion-media"><Video clip={e.id} auto /></div>
+          <div class="estacion-cuerpo">
+            <p class="puesto">Puesto {e.puesto}</p>
+            <h3>{e.nombre}</h3>
+            <p class="estacion-texto">{e.texto}</p>
+            <ul class="incluye" aria-label={`Qué incluye ${e.nombre}`}>
+              {e.incluye.map((i) => <li><Dato pendiente>{i}</Dato></li>)}
+            </ul>
+            <p class="precio"><span>Precio</span> <Dato pendiente={e.precio.pendiente}>{e.precio.texto}</Dato></p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .recorrido { margin-top: clamp(2rem, 5vw, 3rem); }
+  .escenario { display: none; }
+
+  /* Tarjetas: celular, sin script y con movimiento reducido */
+  .estaciones { display: grid; gap: 1.25rem; }
+  .estacion { background: var(--blanco); border: var(--borde); border-radius: var(--radio); overflow: hidden; box-shadow: var(--sombra); display: flex; flex-direction: column; }
+  .estacion-media { aspect-ratio: 16 / 10; background: #0b0d12; overflow: hidden; }
+  .estacion-media :global(video) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .estacion:hover .estacion-media :global(video) { transform: scale(1.03); }
+  .estacion-cuerpo { padding: 1.4rem 1.5rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
+  .puesto { font: 750 var(--t-xs)/1 var(--fd); font-stretch: 115%; letter-spacing: 0.06em; color: var(--ambar); font-variant-numeric: tabular-nums; }
+  .estacion h3 { font-size: var(--t-l); margin-top: 0.5rem; }
+  .estacion-texto { color: var(--gris); margin-top: 0.55rem; max-width: 46ch; }
+  .incluye { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: 0.45rem; font-size: var(--t-s); }
+  .incluye li { position: relative; padding-left: 1.6rem; }
+  /* Visto de línea en el cian de la marca */
+  .incluye li::before {
+    content: ''; position: absolute; left: 0.1rem; top: 0.35em; width: 0.8rem; height: 0.45rem;
+    border-left: 2px solid var(--cian-oscuro); border-bottom: 2px solid var(--cian-oscuro); transform: rotate(-45deg);
+  }
+  .precio { margin-top: 1.25rem; padding-top: 1.1rem; border-top: var(--borde); display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .precio span:first-child { font-size: var(--t-xs); font-weight: 600; font-stretch: 108%; letter-spacing: 0.03em; color: var(--gris); }
+  @media (min-width: 48rem) { .estaciones { grid-template-columns: 1fr 1fr; } }
+
+  /* Recorrido de escritorio: pantalla fija a la izquierda, estaciones bajando a la derecha */
+  @media (min-width: 64rem) {
+    :global(.recorrido-activo) .recorrido { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(3rem, 6vw, 6rem); }
+    :global(.recorrido-activo) .escenario {
+      display: block; position: sticky; top: 13vh; height: 74vh; border-radius: 1.5rem; overflow: hidden;
+      background: #0b0d12; box-shadow: 0 30px 80px -40px rgba(16, 21, 28, 0.55);
+    }
+    .escenario-capa { position: absolute; inset: 0; clip-path: inset(100% 0% 0% 0%); }
+    .escenario-capa:first-child { clip-path: inset(0% 0% 0% 0%); }
+    .escenario-capa :global(video) { width: 100%; height: 100%; object-fit: cover; }
+    /* Con WebGL el lienzo pinta los videos; las capas siguen ahí (invisibles) para que los videos decodifiquen */
+    .escenario :global(.escenario-gl) { position: absolute; inset: 0; z-index: 3; width: 100% !important; height: 100% !important; }
+    .escenario:global(.con-gl) .escenario-capa { opacity: 0; clip-path: none; }
+
+    .escenario-pie {
+      position: absolute; inset: auto 0 0; z-index: 5; display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
+      padding: 5rem 2rem 1.75rem; color: #fff; background: linear-gradient(to top, rgba(7, 9, 15, 0.82), transparent);
+    }
+    .escenario-rotulo { display: flex; align-items: baseline; gap: 1rem; }
+    .escenario-nombre { font: 750 var(--t-m)/1 var(--fd); font-stretch: 115%; text-transform: uppercase; letter-spacing: 0.02em; opacity: 0.85; }
+    .escenario-num { display: block; font: 850 clamp(4.5rem, 8vw, 7rem)/0.85 var(--fd); font-stretch: 125%; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+    .escenario-progreso { list-style: none; margin: 0 0 0.4rem; padding: 0; display: flex; gap: 0.4rem; }
+    .escenario-progreso li { position: relative; width: 2.25rem; height: 3px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, 0.28); font-size: 0; color: transparent; }
+    .escenario-progreso li::after { content: ''; position: absolute; inset: 0; background: var(--cian); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .escenario-progreso li:global(.lleno)::after { transform: scaleX(1); }
+
+    :global(.recorrido-activo) .estaciones { display: block; }
+    :global(.recorrido-activo) .estacion {
+      min-height: 74vh; display: flex; align-items: center;
+      background: none; border: 0; box-shadow: none; border-radius: 0; overflow: visible;
+      opacity: 0.28; transition: opacity 0.5s ease;
+    }
+    :global(.recorrido-activo) .estacion:global(.activa) { opacity: 1; }
+    :global(.recorrido-activo) .estacion-media { display: none; }
+    :global(.recorrido-activo) .estacion-cuerpo { padding: 0; }
+    :global(.recorrido-activo) .estacion h3 { font-size: var(--t-xl); }
+    :global(.recorrido-activo) .estacion-texto { font-size: var(--t-m); line-height: 1.5; max-width: 30ch; }
+    :global(.recorrido-activo) .precio { max-width: 24rem; }
+    :global(.recorrido-activo) .incluye { grid-template-columns: 1fr 1fr; gap: 0.6rem 1.25rem; max-width: 30rem; font-size: var(--t-base); }
+  }
+</style>

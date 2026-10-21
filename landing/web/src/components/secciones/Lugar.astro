@@ -1,0 +1,146 @@
+---
+import { Picture } from 'astro:assets';
+import Dato from '../Dato.astro';
+import Video from '../Video.astro';
+import WhatsAppIcon from '../WhatsAppIcon.astro';
+import fachada from '../../assets/fachada.webp';
+import { NEGOCIO, HORARIO, COMODIDADES, GALERIA } from '../../data/local';
+import { WA } from '../../lib/sitio';
+import { hora } from '../../lib/hora';
+
+// La semana de lunes a domingo, día por día
+const NOMBRES = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+const SEMANA = [1, 2, 3, 4, 5, 6, 0].map((dia) => {
+  const d = HORARIO.dias.find((x) => x.dia === dia);
+  return { dia, nombre: NOMBRES[dia], rango: d ? `${hora(d.abre)} – ${hora(d.cierra)}` : 'Cerrado' };
+});
+
+const fotos = Object.fromEntries(
+  Object.entries(import.meta.glob<{ default: ImageMetadata }>('../../assets/galeria/*.webp', { eager: true })).map(([k, v]) => [k, v.default]),
+);
+
+// Íconos de línea (Lucide)
+const ICONOS = {
+  aire: '<path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/>',
+  wifi: '<path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/>',
+  bebida: '<path d="m6 8 1.75 12.28a2 2 0 0 0 2 1.72h4.54a2 2 0 0 0 2-1.72L18 8"/><path d="M5 8h14"/><path d="M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"/><path d="m12 8 1-6h2"/>',
+  audifonos: '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+};
+---
+<section class="seccion" id="lugar" aria-labelledby="t-lugar">
+  <div class="envoltura lugar">
+    <div>
+      <h2 class="titulo" id="t-lugar">Así se ve por dentro</h2>
+      <p class="entrada">Luces bajas, pantallas grandes, sillas cómodas y aire acondicionado. Grabado en el local.</p>
+      <ul class="comodidades cascada">
+        {COMODIDADES.map((c) => (
+          <li>
+            <span class="comodidad-icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={ICONOS[c.icono]} />
+            </span>
+            <div><strong>{c.titulo}</strong><span><Dato pendiente={c.icono === 'wifi'}>{c.texto}</Dato></span></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <!-- Sin parallax: el reel ya trae sus márgenes y su movimiento; ampliarlo recortaría los rótulos -->
+    <div class="marco lugar-video">
+      <Video clip="reel" auto etiqueta="Recorrido por GamerZone: el letrero de neón Game Room y los puestos 07 PC gamer, 11 consolas, 03 fútbol y 12 salas" />
+    </div>
+  </div>
+
+  <!-- Fotos reales del local, sacadas de sus videos -->
+  <ul class="envoltura galeria cascada" aria-label="Fotos del local">
+    {GALERIA.map((g) => (
+      <li>
+        <Picture src={fotos[`../../assets/galeria/${g.foto}.webp`]} formats={['avif']} fallbackFormat="webp" widths={[360, 560]} sizes="(min-width: 64rem) 22rem, 50vw" loading="lazy" alt={g.alt} />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section class="seccion" id="visitanos" aria-labelledby="t-visitanos">
+  <div class="envoltura visita">
+    <div>
+      <h2 class="titulo" id="t-visitanos">Cómo llegar</h2>
+      <dl class="datos">
+        <div><dt>Dirección</dt><dd><Dato pendiente={NEGOCIO.direccion.pendiente}>{NEGOCIO.direccion.texto}</Dato>, <Dato pendiente={NEGOCIO.ciudad.pendiente}>{NEGOCIO.ciudad.texto}</Dato></dd></div>
+        <div><dt>Horario</dt><dd>
+          <!-- Toda la semana, con el día de hoy resaltado (base/estado.ts) -->
+          <table class="semana">
+            <caption class="sr-only">Horario de la semana</caption>
+            <tbody>
+              {SEMANA.map((s) => (
+                <tr data-dia={s.dia}>
+                  <th scope="row">{s.nombre}<span class="semana-hoy">Hoy</span></th>
+                  <td><Dato pendiente={HORARIO.pendiente}>{s.rango}</Dato></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </dd></div>
+        <div><dt>WhatsApp</dt><dd><a href={WA} target="_blank" rel="noopener"><Dato pendiente={NEGOCIO.whatsapp.pendiente}>{NEGOCIO.whatsapp.visible}</Dato></a></dd></div>
+        <div><dt>Instagram</dt><dd><Dato pendiente={NEGOCIO.instagram.pendiente}>{NEGOCIO.instagram.texto}</Dato></dd></div>
+      </dl>
+      <div class="botones">
+        <a class="boton boton-principal" href={WA} target="_blank" rel="noopener"><WhatsAppIcon /> Escríbenos por WhatsApp</a>
+        <a class="boton boton-secundario" href={NEGOCIO.mapa} target="_blank" rel="noopener">Abrir en Google Maps</a>
+      </div>
+    </div>
+    <figure class="fachada">
+      <div class="marco-parallax fachada-marco">
+        <Picture src={fachada} formats={['avif']} fallbackFormat="webp" widths={[480]} sizes="(min-width: 48rem) 26rem, 100vw" loading="lazy"
+          alt="Entrada del local: Pac-Man y tres fantasmas de neón encima de la puerta y el logo de GamerZone en la reja" />
+      </div>
+      <figcaption>Busca los fantasmas de Pac-Man encima de la puerta.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .lugar { display: grid; gap: 2rem; align-items: center; }
+
+  .comodidades { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1rem; }
+  .comodidades li { display: flex; gap: 0.9rem; align-items: flex-start; }
+  .comodidad-icono { flex: none; display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 0.7rem; background: color-mix(in srgb, var(--cian-oscuro) 10%, transparent); color: var(--cian-oscuro); }
+  .comodidad-icono svg { width: 1.3rem; height: 1.3rem; }
+  .comodidades strong { display: block; font-weight: 700; font-stretch: 108%; }
+  .comodidades span { color: var(--gris); font-size: var(--t-s); }
+
+  /* Galería: fotos reales en formato vertical, como se grabaron */
+  .galeria { list-style: none; padding: 0; margin-top: clamp(2.5rem, 6vw, 4rem); display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .galeria li { border-radius: var(--radio); overflow: hidden; aspect-ratio: 4 / 5; background: #0b0d12; box-shadow: var(--sombra); }
+  .galeria :global(picture), .galeria :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .galeria li:hover :global(img) { transform: scale(1.04); }
+  @media (min-width: 64rem) {
+    .galeria { grid-template-columns: repeat(6, 1fr); }
+    /* Ritmo: las fotos pares bajan un poco, como una tira de fotos sobre la mesa */
+    .galeria li:nth-child(even) { transform: translateY(2rem); }
+  }
+  .lugar-video { aspect-ratio: 4 / 5; max-width: 26rem; width: 100%; justify-self: center; background: #0b0d12; }
+  .marco, .marco-parallax { border-radius: var(--radio); overflow: hidden; box-shadow: var(--sombra); }
+  .marco :global(video), .marco-parallax :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .visita { display: grid; gap: 2.5rem; }
+  .datos { margin: 1.75rem 0 0; display: grid; gap: 1.1rem; }
+  .datos dd { margin: 0.2rem 0 0; font-size: var(--t-m); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .datos a { text-decoration: none; }
+  .semana { width: 100%; max-width: 26rem; margin-top: 0.4rem; border-collapse: collapse; font-size: var(--t-base); font-weight: 500; }
+  .semana th, .semana td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: var(--borde); }
+  .semana th { font-weight: 500; color: var(--gris); }
+  .semana td { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .semana-hoy { display: none; margin-left: 0.5rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--cian-oscuro); color: #fff; font-size: var(--t-xs); font-weight: 650; vertical-align: 0.1em; }
+  .semana tr:global(.hoy) { background: color-mix(in srgb, var(--cian-oscuro) 9%, transparent); }
+  .semana tr:global(.hoy) th { color: var(--tinta); font-weight: 700; }
+  .semana tr:global(.hoy) td { font-weight: 700; }
+  .semana tr:global(.hoy) .semana-hoy { display: inline-block; }
+  .fachada { margin: 0; }
+  .fachada-marco { aspect-ratio: 480 / 610; max-width: 26rem; }
+  .fachada-marco :global(picture) { display: block; height: 100%; }
+  .fachada figcaption { color: var(--gris); margin-top: 0.6rem; font-size: var(--t-s); }
+
+  @media (min-width: 48rem) {
+    .lugar { grid-template-columns: 1fr 1fr; }
+    .visita { grid-template-columns: 1.1fr 0.9fr; align-items: center; }
+  }
+</style>

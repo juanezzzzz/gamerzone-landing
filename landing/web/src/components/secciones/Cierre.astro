@@ -1,0 +1,75 @@
+---
+// El cierre espeja el inicio: la sala a oscuras en forma de tarjeta, el letrero de la puerta,
+// el estado del horario en vivo y las dos acciones de siempre.
+import Dato from '../Dato.astro';
+import WhatsAppIcon from '../WhatsAppIcon.astro';
+import { NEGOCIO, HORARIO } from '../../data/local';
+import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
+---
+<section class="cierre" id="cierre" aria-labelledby="t-cierre">
+  <div class="cierre-tarjeta">
+    <div class="cierre-grilla">
+      <h2 class="cierre-titulo" id="t-cierre">Te esperamos.</h2>
+      <div class="cierre-texto">
+        <p class="cierre-estado" data-estado>
+          <span class="estado-punto" aria-hidden="true"></span>
+          <Dato pendiente={HORARIO.pendiente}><span data-estado-texto>{FILAS_HORARIO[0].dia}, {FILAS_HORARIO[0].rango}</span></Dato>
+        </p>
+        <p class="cierre-donde">
+          <Dato pendiente={NEGOCIO.direccion.pendiente}>{NEGOCIO.direccion.texto}</Dato>, <Dato pendiente={NEGOCIO.ciudad.pendiente}>{NEGOCIO.ciudad.texto}</Dato>
+        </p>
+        <div class="botones">
+          <a class="boton boton-principal" href={WA} target="_blank" rel="noopener"><WhatsAppIcon /> Escríbenos por WhatsApp</a>
+          <a class="boton boton-secundario" href={NEGOCIO.mapa} target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONO_PIN} />
+            Cómo llegar
+          </a>
+        </div>
+      </div>
+      <!-- El mismo control del inicio, ya encendido: la página cierra donde terminó la sala -->
+      <div class="cierre-control" aria-hidden="true">
+        <img src="/media/control-3d.webp" alt="" width="1120" height="896" loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cierre { padding: 0 var(--gutter) clamp(3rem, 7vw, 5rem); }
+  .cierre-tarjeta {
+    position: relative; overflow: hidden; border-radius: 28px; color: var(--texto-noche);
+    background: radial-gradient(50rem 30rem at 85% 30%, color-mix(in srgb, var(--cian) 11%, transparent), transparent 70%), var(--noche);
+    padding: clamp(3rem, 8vw, 6.5rem) clamp(1.5rem, 6vw, 5.5rem);
+  }
+  /* El mismo grano de la sala del inicio */
+  .cierre-tarjeta::after {
+    content: ''; position: absolute; inset: -50%; pointer-events: none; opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  }
+  .cierre-grilla { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; align-items: center; max-width: var(--ancho); margin-inline: auto; }
+  /* «ESPERAMOS.» es una palabra larga a tamaño de cartel: el título ocupa todo el ancho de la tarjeta */
+  .cierre-titulo { grid-column: 1 / -1; font-size: clamp(2.1rem, 9.2vw, 7.5rem); font-weight: 850; font-stretch: 125%; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; }
+
+  .cierre-estado { display: flex; align-items: center; gap: 0.6rem; font-size: clamp(var(--t-base), 2.4vw, var(--t-m)); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .estado-punto { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--gris-noche); flex: none; }
+  .cierre-estado:global(.abierto) .estado-punto { background: #1fbf6a; box-shadow: 0 0 0 5px color-mix(in srgb, #1fbf6a 22%, transparent); }
+  .cierre-estado:global(.pronto) .estado-punto { background: var(--pintura); box-shadow: 0 0 0 5px color-mix(in srgb, var(--pintura) 25%, transparent); }
+  .cierre-donde { margin-top: 0.4rem; color: var(--gris-noche); font-size: var(--t-base); }
+
+  .botones { margin-top: 2.25rem; }
+  .boton-principal { background: var(--cian); color: #04191a; }
+  .boton-principal:hover { background: #8ef7f7; }
+  .boton-secundario { background: transparent; color: var(--texto-noche); border-color: color-mix(in srgb, var(--texto-noche) 28%, transparent); }
+  .boton-secundario:hover { border-color: var(--cian); }
+
+  .cierre-control { position: relative; display: grid; place-items: center; }
+  .cierre-control::before {
+    content: ''; position: absolute; inset: 5% 0; pointer-events: none; filter: blur(30px);
+    background: radial-gradient(50% 50% at 50% 55%, color-mix(in srgb, var(--cian) 22%, transparent), transparent 70%);
+  }
+  .cierre-control img { position: relative; width: 100%; height: auto; }
+
+  @media (min-width: 64rem) {
+    .cierre-grilla { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: 3rem 4rem; }
+  }
+</style>

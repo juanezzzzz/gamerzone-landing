@@ -1,0 +1,55 @@
+---
+// Cómo es ir a jugar: una secuencia real (escribir, llegar, pagar), por eso lleva números. Una línea se
+// dibuja con el scroll uniendo los pasos (efectos/revelaciones.ts).
+import Dato from '../Dato.astro';
+import { PASOS } from '../../data/local';
+---
+<section class="seccion" id="como-funciona" aria-labelledby="t-pasos">
+  <div class="envoltura">
+    <h2 class="titulo" id="t-pasos">Así de fácil</h2>
+    <div class="pasos-marco">
+      <span class="pasos-linea" aria-hidden="true"><span class="pasos-avance"></span></span>
+      <ol class="pasos">
+        {PASOS.map((p, i) => (
+          <li class="paso">
+            <span class="paso-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="paso-punto" aria-hidden="true"></span>
+            <h3>{p.titulo}</h3>
+            <p><Dato pendiente>{p.texto}</Dato></p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pasos-marco { position: relative; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.5rem; }
+  .paso { position: relative; padding-left: 2.75rem; }
+  .paso-num {
+    display: block; font: 850 clamp(4rem, 9vw, 6.5rem)/0.85 var(--fd); font-stretch: 125%; letter-spacing: -0.05em;
+    color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--tinta) 28%, transparent);
+  }
+  .paso h3 { font-size: var(--t-l); margin-top: 1rem; }
+  .paso p { color: var(--gris); margin-top: 0.5rem; max-width: 32ch; }
+
+  /* La línea: vertical en celular, horizontal en escritorio; el tramo cian avanza con el scroll */
+  .pasos-linea { position: absolute; left: 0.45rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: var(--linea); }
+  /* Sin script la línea queda completa (--p: 1); el script la arranca en 0 y la avanza con el scroll */
+  .pasos-avance { --p: 1; position: absolute; inset: 0; background: var(--cian-oscuro); transform: scaleY(var(--p)); transform-origin: top; }
+  .paso-punto {
+    position: absolute; left: 0.1rem; top: 0.5rem; width: 0.9rem; height: 0.9rem; border-radius: 50%;
+    background: var(--papel); border: 2px solid var(--linea); transition: border-color 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  .paso:global(.alcanzado) .paso-punto { border-color: var(--cian-oscuro); background: var(--cian-oscuro); box-shadow: 0 0 0 5px color-mix(in srgb, var(--cian-oscuro) 18%, transparent); }
+  .paso:global(.alcanzado) .paso-num { color: var(--tinta); -webkit-text-stroke: 0; transition: color 0.5s ease; }
+
+  @media (min-width: 64rem) {
+    .pasos { grid-template-columns: repeat(3, 1fr); gap: 3rem; padding-top: 2.5rem; }
+    .paso { padding-left: 0; }
+    .pasos-linea { left: 0; right: 0; top: 0.45rem; bottom: auto; width: auto; height: 2px; }
+    .pasos-avance { transform: scaleX(var(--p)); transform-origin: left; }
+    .paso-punto { left: 0; top: -2.5rem; }
+  }
+</style>
