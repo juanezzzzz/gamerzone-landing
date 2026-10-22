@@ -1,41 +1,47 @@
-@import '@fontsource-variable/archivo/wdth.css';
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..700&family=Sora:wght@400..700&display=swap');
 
-/* GamerZone — el inicio es la sala a oscuras con el control que se enciende; el resto es información clara. */
 :root {
-  /* La sala (solo el inicio) */
-  --noche: #07090f;
-  --cian: #52f2f2;          /* el logo */
-  --texto-noche: #edeff5;
-  --gris-noche: #9aa1b5;
+  --noche: #080808;
+  --superficie: #101010;
+  --superficie-2: #1B1B1B;
+  --superficie-3: #222222;
 
-  /* La página */
-  --papel: #f2f4f7;
-  --blanco: #ffffff;
-  --tinta: #10151c;
-  --gris: #545e6b;
-  --linea: #dde2e9;
-  --cian-oscuro: #0a7a85;   /* el cian del logo con contraste AA sobre blanco */
+  --acento: #2563EB;
+  --acento-claro: #60A5FA;
 
-  /* Una sola familia, Archivo, con dos anchos: expandida y pesada para títulos (el tono de una
-     transmisión de esports), normal para leer. */
-  --fd: 'Archivo Variable', system-ui, sans-serif;
-  --ft: 'Archivo Variable', system-ui, sans-serif;
-  --ancho-titulo: 120%;
+  --texto: #F5F5F5;
+  --texto-secundario: #A8A8A8;
+  --linea: rgba(255, 255, 255, 0.08);
 
-  /* Escala de tercera mayor (1,25) sobre 17 px */
+  --papel: var(--noche);
+  --blanco: var(--superficie);
+  --tinta: var(--texto);
+  --gris: var(--texto-secundario);
+  --gris-noche: var(--texto-secundario);
+  --texto-noche: var(--texto);
+  --violeta: var(--acento);
+  --violeta-claro: var(--acento-claro);
+  --rosa: var(--acento);
+  --cian: var(--acento);
+  --cian-oscuro: var(--acento);
+
+  --fd: 'Sora', system-ui, sans-serif;
+  --ft: 'DM Sans', system-ui, sans-serif;
+
   --t-xs: 0.8125rem;
   --t-s: 0.9375rem;
   --t-base: 1.0625rem;
   --t-m: 1.3125rem;
-  --t-l: 1.625rem;
-  --t-xl: clamp(2.25rem, 5.2vw, 3.9rem);
-  --t-xxl: clamp(2.75rem, 10.5vw, 6.5rem);
+  --t-l: 1.75rem;
+  --t-xl: clamp(2.5rem, 5.8vw, 4.5rem);
+  --t-xxl: clamp(3rem, 11vw, 7.5rem);
   --borde: 1px solid var(--linea);
   --radio: 1rem;
-  --sombra: 0 1px 2px rgba(16, 21, 28, 0.05), 0 8px 24px -12px rgba(16, 21, 28, 0.12);
+  --sombra: 0 2px 6px rgba(0, 0, 0, 0.3), 0 12px 24px -8px rgba(0, 0, 0, 0.45);
+  --sombra-elevada: 0 4px 12px rgba(0, 0, 0, 0.35), 0 24px 48px -12px rgba(0, 0, 0, 0.6);
   --ancho: 72rem;
   --gutter: clamp(1rem, 4vw, 2.5rem);
-  --barra-movil: 4.5rem;   /* alto de la barra fija de contacto en celular */
+  --barra-movil: 4.5rem;
 }
 @media (min-width: 64rem) { :root { --barra-movil: 0px; } }
 
@@ -46,8 +52,7 @@ body {
   background: var(--papel);
   color: var(--tinta);
   font: 400 var(--t-base)/1.6 var(--ft);
-  font-stretch: 106%;   /* Archivo es algo estrecha en su ancho normal; así respira al leer */
-  letter-spacing: 0.003em;
+  letter-spacing: 0.01em;
   font-kerning: normal;
   -webkit-font-smoothing: antialiased;
   padding-bottom: var(--barra-movil);
@@ -55,38 +60,58 @@ body {
 img, video { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
 h1, h2, h3 {
-  margin: 0; font-family: var(--fd); font-weight: 800; font-stretch: var(--ancho-titulo);
+  margin: 0; font-family: var(--fd); font-weight: 700;
   line-height: 1.04; letter-spacing: -0.02em; text-wrap: balance;
+  text-transform: uppercase;
 }
 p { margin: 0; text-wrap: pretty; }
-/* Rótulos pequeños: un poco más anchos y espaciados para que se lean a ese tamaño */
-dt, .rotulo { font-size: var(--t-xs); font-weight: 600; font-stretch: 108%; letter-spacing: 0.03em; color: var(--gris); }
+dt, .rotulo { font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); }
 .cifras { font-variant-numeric: tabular-nums; }
 
-:focus-visible { outline: 2px solid var(--cian-oscuro); outline-offset: 3px; border-radius: 4px; }
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; border-radius: 4px; }
 
 .envoltura { width: min(100% - 2 * var(--gutter), var(--ancho)); margin-inline: auto; }
-.seccion { padding-block: clamp(4rem, 9vw, 7rem); }
-.seccion + .seccion { border-top: var(--borde); }
-.titulo { font-size: var(--t-xl); max-width: 18ch; }
-.botones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.6rem; }
-.entrada { color: var(--gris); max-width: 50ch; margin-top: 0.9rem; font-size: var(--t-m); line-height: 1.5; }
+.seccion { padding-block: clamp(6rem, 12vw, 10rem); }
+.seccion + .seccion { position: relative; }
+.seccion + .seccion::before {
+  content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06) 30%, rgba(255, 255, 255, 0.06) 70%, transparent);
+}
+.titulo {
+  font-size: var(--t-xl); max-width: 18ch;
+  color: var(--texto);
+}
+.botones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.8rem; }
+.entrada { color: var(--gris); max-width: 50ch; margin-top: 1rem; font-size: var(--t-m); line-height: 1.55; }
 
-/* Botones */
 .boton {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem;
-  min-height: 3rem; padding: 0.75rem 1.35rem;
-  font: 650 1rem/1 var(--ft); font-stretch: 106%; letter-spacing: 0.005em; text-decoration: none;
-  border-radius: 0.6rem; border: 1px solid transparent;
-  transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+  min-height: 3.25rem; padding: 0.85rem 1.6rem;
+  font: 600 1rem/1 var(--ft); letter-spacing: 0.02em; text-decoration: none;
+  border-radius: 0.75rem; border: 1px solid transparent;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
 .boton svg { width: 1.2rem; height: 1.2rem; flex: none; }
-.boton:active { transform: translateY(1px); }
-.boton-principal { background: var(--tinta); color: #fff; }
-.boton-principal:hover { background: #283240; }
-.boton-secundario { border-color: var(--linea); color: var(--tinta); background: var(--blanco); }
-.boton-secundario:hover { border-color: var(--tinta); }
+.boton:active { transform: translateY(1px) scale(0.97); }
+.boton-principal {
+  background: var(--acento);
+  color: #fff;
+}
+.boton-principal:hover {
+  background: var(--acento-claro);
+  transform: translateY(-1px);
+}
+.boton-secundario {
+  border-color: rgba(255, 255, 255, 0.12); color: var(--tinta);
+  background: color-mix(in srgb, #fff 4%, transparent); backdrop-filter: blur(8px);
+}
+.boton-secundario:hover {
+  border-color: rgba(255, 255, 255, 0.25); color: #fff;
+  background: color-mix(in srgb, #fff 8%, transparent);
+  transform: translateY(-1px);
+}
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 

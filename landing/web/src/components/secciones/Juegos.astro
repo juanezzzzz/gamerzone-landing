@@ -1,26 +1,16 @@
 ---
-// Juegos: la pantalla con la biblioteca real del local y una marquesina con los títulos.
+// Juegos: interstitial — título grande y marquesina full-width con los nombres de los juegos.
 import Dato from '../Dato.astro';
-import Video from '../Video.astro';
 import { JUEGOS } from '../../data/local';
 
 const corte = Math.ceil(JUEGOS.lista.length / 2);
 const mitades = [JUEGOS.lista.slice(0, corte), JUEGOS.lista.slice(corte)];
 ---
-<section class="seccion" id="juegos" aria-labelledby="t-juegos">
-  <div class="envoltura juegos">
-    <div class="juegos-texto">
-      <h2 class="titulo" id="t-juegos">Algunos de los juegos</h2>
-      <p class="entrada"><Dato pendiente={JUEGOS.pendiente}>Vistos en la biblioteca de las consolas.</Dato> Si buscas uno en particular, pregúntanos por WhatsApp.</p>
-    </div>
-    <figure class="pantalla">
-      <div class="pantalla-marco">
-        <Video clip="juegos" auto etiqueta="La biblioteca de juegos de la Xbox del local: Forza Horizon 5, Gang Beasts, Halo Infinite, Hitman" />
-      </div>
-      <figcaption>La biblioteca de la Xbox del local.</figcaption>
-    </figure>
+<section class="juegos-inter" id="juegos" aria-labelledby="t-juegos">
+  <div class="envoltura juegos-cabeza">
+    <h2 class="juegos-titulo" id="t-juegos">Biblioteca</h2>
+    <p class="juegos-sub"><Dato pendiente={JUEGOS.pendiente}>{JUEGOS.lista.length}+ títulos listos para jugar.</Dato></p>
   </div>
-  <!-- Marquesina: dos filas de títulos en sentidos opuestos. La lista accesible va aparte. -->
   <div class="marquesina" aria-hidden="true">
     {[mitades[0], mitades[1]].map((fila, n) => (
       <div class:list={['marquesina-fila', { inversa: n === 1 }]}>
@@ -34,32 +24,31 @@ const mitades = [JUEGOS.lista.slice(0, corte), JUEGOS.lista.slice(corte)];
 </section>
 
 <style>
-  .juegos { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
-  .pantalla { margin: 0; }
-  .pantalla-marco {
-    padding: 0.75rem; border-radius: 1.5rem;
-    background: linear-gradient(160deg, #23263a, #0d0f18);
-    box-shadow: 0 40px 80px -40px rgba(16, 21, 28, 0.55);
+  .juegos-inter {
+    padding-block: clamp(4rem, 8vw, 6rem);
+    overflow: hidden;
   }
-  .pantalla-marco :global(video) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 0.9rem; background: #0b0d12; }
-  .pantalla figcaption { margin-top: 0.75rem; color: var(--gris); font-size: var(--t-s); }
+  .juegos-cabeza { text-align: center; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .juegos-titulo {
+    font: 400 var(--t-xxl)/0.9 var(--fd); letter-spacing: -0.035em;
+    max-width: none;
+    color: #fff;
+  }
+  .juegos-sub { color: var(--gris); font-size: var(--t-m); margin-top: 0.75rem; }
 
-  /* Marquesina de títulos: contorno arriba, relleno abajo, en sentidos opuestos */
-  .marquesina { margin-top: clamp(2.5rem, 6vw, 4.5rem); display: grid; gap: 0.25rem; overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquesina { display: grid; gap: 0.35rem; overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
   .marquesina-fila { display: flex; width: max-content; animation: desliza 60s linear infinite; }
   .marquesina-fila.inversa { animation-direction: reverse; animation-duration: 70s; }
   .marquesina-grupo { display: flex; }
   .marquesina-juego {
     display: flex; align-items: center; gap: 0.6em; padding-right: 0.6em; white-space: nowrap;
-    font: 850 clamp(2.4rem, 7vw, 5.5rem)/1.05 var(--fd); font-stretch: 125%; letter-spacing: -0.03em; text-transform: uppercase;
-    color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--tinta) 32%, transparent);
+    font: 400 clamp(3rem, 9vw, 7rem)/1.05 var(--fd); letter-spacing: -0.03em;
+    color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
   }
-  .marquesina-juego::after { content: ''; width: 0.18em; height: 0.18em; border-radius: 50%; background: var(--cian-oscuro); }
-  .inversa .marquesina-juego { color: var(--tinta); -webkit-text-stroke: 0; }
+  .marquesina-juego::after { content: ''; width: 0.18em; height: 0.18em; border-radius: 50%; background: var(--acento); }
+  .inversa .marquesina-juego { color: rgba(255, 255, 255, 0.88); -webkit-text-stroke: 0; }
   .marquesina:hover .marquesina-fila { animation-play-state: paused; }
   @keyframes desliza { to { transform: translateX(-50%); } }
-
-  @media (min-width: 64rem) { .juegos { grid-template-columns: 0.95fr 1.05fr; } }
 </style>

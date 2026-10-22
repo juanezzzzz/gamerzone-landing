@@ -32,13 +32,19 @@ import { WA } from '../../lib/sitio';
 
 <style>
   .pie { padding-block: 0.5rem calc(2.5rem + var(--barra-movil)); color: var(--gris); font-size: var(--t-s); }
-  .pie-grilla { display: grid; gap: 1.75rem; align-items: center; padding-top: 2rem; border-top: var(--borde); }
+  .pie-grilla {
+    display: grid; gap: 1.75rem; align-items: center; padding-top: 2.5rem; position: relative;
+  }
+  .pie-grilla::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06) 30%, rgba(255, 255, 255, 0.06) 70%, transparent);
+  }
   .pie-marca { display: flex; align-items: center; gap: 1rem; }
   .pie-marca :global(img) { display: block; width: 56px; height: 56px; object-fit: contain; }
-  .pie-marca strong { display: block; color: var(--tinta); font-weight: 700; font-stretch: 112%; }
+  .pie-marca strong { display: block; color: var(--tinta); font-weight: 700; }
   .pie-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
   .pie-nav a { text-decoration: none; padding-block: 0.4rem; color: var(--tinta); font-weight: 550; }
-  .pie-nav a:hover { color: var(--cian-oscuro); }
+  .pie-nav a:hover { color: var(--violeta-claro); }
   @media (min-width: 64rem) {
     .pie-grilla { grid-template-columns: auto 1fr auto; gap: 3rem; }
     .pie-nav { justify-content: center; }
@@ -47,9 +53,10 @@ import { WA } from '../../lib/sitio';
   .barra-movil {
     position: fixed; inset: auto 0 0; z-index: 50;
     display: grid; grid-template-columns: 1.4fr 1fr; gap: 0.6rem;
-    padding: 0.7rem var(--gutter) calc(0.7rem + env(safe-area-inset-bottom));
-    background: color-mix(in srgb, var(--blanco) 92%, transparent); backdrop-filter: blur(12px);
-    border-top: var(--borde);
+    padding: 0.75rem var(--gutter) calc(0.75rem + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--noche) 88%, transparent); backdrop-filter: blur(20px) saturate(1.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 -4px 32px -8px rgba(0, 0, 0, 0.5), 0 -1px 0 color-mix(in srgb, var(--cian) 5%, transparent);
   }
 
   @media (min-width: 64rem) { .barra-movil { display: none; } }

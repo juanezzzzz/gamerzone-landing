@@ -1,16 +1,15 @@
 ---
-// El cierre espeja el inicio: la sala a oscuras en forma de tarjeta, el letrero de la puerta,
-// el estado del horario en vivo y las dos acciones de siempre.
+// El cierre llena el viewport completo: tipografía a escala de pantalla, el control flotando.
 import Dato from '../Dato.astro';
 import WhatsAppIcon from '../WhatsAppIcon.astro';
 import { NEGOCIO, HORARIO } from '../../data/local';
 import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
 ---
 <section class="cierre" id="cierre" aria-labelledby="t-cierre">
-  <div class="cierre-tarjeta">
-    <div class="cierre-grilla">
-      <h2 class="cierre-titulo" id="t-cierre">Te esperamos.</h2>
-      <div class="cierre-texto">
+  <div class="cierre-fondo">
+    <div class="cierre-contenido">
+      <h2 class="cierre-titulo" id="t-cierre">¿Listo para jugar?</h2>
+      <div class="cierre-info">
         <p class="cierre-estado" data-estado>
           <span class="estado-punto" aria-hidden="true"></span>
           <Dato pendiente={HORARIO.pendiente}><span data-estado-texto>{FILAS_HORARIO[0].dia}, {FILAS_HORARIO[0].rango}</span></Dato>
@@ -26,50 +25,54 @@ import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
           </a>
         </div>
       </div>
-      <!-- El mismo control del inicio, ya encendido: la página cierra donde terminó la sala -->
       <div class="cierre-control" aria-hidden="true">
         <img src="/media/control-3d.webp" alt="" width="1120" height="896" loading="lazy" decoding="async" />
       </div>
     </div>
   </div>
+  <!-- Grano de película -->
+  <span class="cierre-grano" aria-hidden="true"></span>
 </section>
 
 <style>
-  .cierre { padding: 0 var(--gutter) clamp(3rem, 7vw, 5rem); }
-  .cierre-tarjeta {
-    position: relative; overflow: hidden; border-radius: 28px; color: var(--texto-noche);
-    background: radial-gradient(50rem 30rem at 85% 30%, color-mix(in srgb, var(--cian) 11%, transparent), transparent 70%), var(--noche);
-    padding: clamp(3rem, 8vw, 6.5rem) clamp(1.5rem, 6vw, 5.5rem);
+  .cierre { position: relative; overflow: hidden; }
+  .cierre-fondo {
+    min-height: 100svh; display: grid; place-items: center;
+    color: var(--texto-noche);
+    background: var(--noche);
+    padding: clamp(5rem, 12vw, 10rem) var(--gutter);
   }
-  /* El mismo grano de la sala del inicio */
-  .cierre-tarjeta::after {
-    content: ''; position: absolute; inset: -50%; pointer-events: none; opacity: 0.06;
+  .cierre-grano {
+    position: absolute; inset: -50%; pointer-events: none; opacity: 0.06;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
   }
-  .cierre-grilla { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; align-items: center; max-width: var(--ancho); margin-inline: auto; }
-  /* «ESPERAMOS.» es una palabra larga a tamaño de cartel: el título ocupa todo el ancho de la tarjeta */
-  .cierre-titulo { grid-column: 1 / -1; font-size: clamp(2.1rem, 9.2vw, 7.5rem); font-weight: 850; font-stretch: 125%; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; }
+  .cierre-contenido {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem;
+    max-width: var(--ancho); width: 100%;
+  }
+  .cierre-titulo {
+    font-size: clamp(3rem, 14vw, 12rem);
+    line-height: 0.85; letter-spacing: -0.04em;
+    color: #fff;
+  }
 
   .cierre-estado { display: flex; align-items: center; gap: 0.6rem; font-size: clamp(var(--t-base), 2.4vw, var(--t-m)); font-weight: 600; font-variant-numeric: tabular-nums; }
   .estado-punto { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--gris-noche); flex: none; }
   .cierre-estado:global(.abierto) .estado-punto { background: #1fbf6a; box-shadow: 0 0 0 5px color-mix(in srgb, #1fbf6a 22%, transparent); }
   .cierre-estado:global(.pronto) .estado-punto { background: var(--cian); box-shadow: 0 0 0 5px color-mix(in srgb, var(--cian) 25%, transparent); }
   .cierre-donde { margin-top: 0.4rem; color: var(--gris-noche); font-size: var(--t-base); }
-
   .botones { margin-top: 2.25rem; }
-  .boton-principal { background: var(--cian); color: #04191a; }
-  .boton-principal:hover { background: #8ef7f7; }
-  .boton-secundario { background: transparent; color: var(--texto-noche); border-color: color-mix(in srgb, var(--texto-noche) 28%, transparent); }
-  .boton-secundario:hover { border-color: var(--cian); }
 
   .cierre-control { position: relative; display: grid; place-items: center; }
   .cierre-control::before {
-    content: ''; position: absolute; inset: 5% 0; pointer-events: none; filter: blur(30px);
-    background: radial-gradient(50% 50% at 50% 55%, color-mix(in srgb, var(--cian) 22%, transparent), transparent 70%);
+    content: ''; position: absolute; inset: 5% 0; pointer-events: none; filter: blur(40px);
+    background: radial-gradient(50% 50% at 50% 55%, rgba(255, 255, 255, 0.03), transparent 70%);
   }
-  .cierre-control img { position: relative; width: 100%; height: auto; }
+  .cierre-control img { position: relative; width: 100%; max-width: 32rem; height: auto; }
 
   @media (min-width: 64rem) {
-    .cierre-grilla { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: 3rem 4rem; }
+    .cierre-contenido { grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: center; }
+    .cierre-titulo { grid-column: 1 / -1; }
   }
 </style>

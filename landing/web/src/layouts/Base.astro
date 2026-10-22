@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import archivo from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+// Fonts loaded via Google Fonts @import in global.css (Sora + DM Sans)
 import { REVISION, NEGOCIO, HORARIO } from '../data/local';
 const titulo = `${NEGOCIO.nombre} · Sala gamer en ${NEGOCIO.ciudad.texto}`;
 const descripcion = 'PC gamer, consolas Xbox, fútbol en pantalla grande y salas para el parche. Escríbenos por WhatsApp o mira cómo llegar.';
@@ -29,14 +29,14 @@ const negocioLocal = {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{titulo}</title>
   <meta name="description" content={descripcion} />
-  <meta name="theme-color" content="#07090f" />
+  <meta name="theme-color" content="#080808" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <!-- El navegador solo descubre la fuente al leer el CSS; así arranca su descarga desde el principio -->
-  <link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Los pósters los pone el script al acercarse (base/videos.ts); sin script queda este fondo oscuro -->
 
-  <noscript><style>video[data-poster] { background: #0b0d12; }</style></noscript>
+  <noscript><style>video[data-poster] { background: #080808; }</style></noscript>
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_CO" />
   <meta property="og:title" content={titulo} />

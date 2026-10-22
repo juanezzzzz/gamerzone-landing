@@ -6,7 +6,7 @@ import { PASOS } from '../../data/local';
 ---
 <section class="seccion" id="como-funciona" aria-labelledby="t-pasos">
   <div class="envoltura">
-    <h2 class="titulo" id="t-pasos">Así de fácil</h2>
+    <h2 class="titulo" id="t-pasos">Cómo funciona</h2>
     <div class="pasos-marco">
       <span class="pasos-linea" aria-hidden="true"><span class="pasos-avance"></span></span>
       <ol class="pasos">
@@ -28,11 +28,12 @@ import { PASOS } from '../../data/local';
   .pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.5rem; }
   .paso { position: relative; padding-left: 2.75rem; }
   .paso-num {
-    display: block; font: 850 clamp(4rem, 9vw, 6.5rem)/0.85 var(--fd); font-stretch: 125%; letter-spacing: -0.05em;
-    color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--tinta) 28%, transparent);
+    display: block; font: 700 clamp(4.5rem, 10vw, 7.5rem)/0.85 var(--fd); letter-spacing: -0.05em;
+    color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
+    transition: color 0.6s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.6s ease, filter 0.6s ease;
   }
   .paso h3 { font-size: var(--t-l); margin-top: 1rem; }
-  .paso p { color: var(--gris); margin-top: 0.5rem; max-width: 32ch; }
+  .paso p { color: var(--gris); margin-top: 0.5rem; max-width: 32ch; line-height: 1.55; }
 
   /* La línea: vertical en celular, horizontal en escritorio; el tramo cian avanza con el scroll */
   .pasos-linea { position: absolute; left: 0.45rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: var(--linea); }
@@ -40,10 +41,11 @@ import { PASOS } from '../../data/local';
   .pasos-avance { --p: 1; position: absolute; inset: 0; background: var(--cian-oscuro); transform: scaleY(var(--p)); transform-origin: top; }
   .paso-punto {
     position: absolute; left: 0.1rem; top: 0.5rem; width: 0.9rem; height: 0.9rem; border-radius: 50%;
-    background: var(--papel); border: 2px solid var(--linea); transition: border-color 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+    background: var(--papel); border: 2px solid var(--linea);
+    transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .paso:global(.alcanzado) .paso-punto { border-color: var(--cian-oscuro); background: var(--cian-oscuro); box-shadow: 0 0 0 5px color-mix(in srgb, var(--cian-oscuro) 18%, transparent); }
-  .paso:global(.alcanzado) .paso-num { color: var(--tinta); -webkit-text-stroke: 0; transition: color 0.5s ease; }
+  .paso:global(.alcanzado) .paso-punto { border-color: var(--cian-oscuro); background: var(--cian-oscuro); box-shadow: 0 0 0 6px color-mix(in srgb, var(--cian-oscuro) 16%, transparent); transform: scale(1.15); }
+  .paso:global(.alcanzado) .paso-num { color: var(--acento); -webkit-text-stroke: 0; }
 
   @media (min-width: 64rem) {
     .pasos { grid-template-columns: repeat(3, 1fr); gap: 3rem; padding-top: 2.5rem; }

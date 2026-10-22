@@ -1,5 +1,5 @@
 ---
-// Planes en grupo: afiches con fotos reales; cada uno abre WhatsApp con el mensaje de ese plan.
+// Planes en grupo: horizontal scroll pinned en desktop, snap scroll en mobile.
 import { Picture } from 'astro:assets';
 import Dato from '../Dato.astro';
 import WhatsAppIcon from '../WhatsAppIcon.astro';
@@ -15,49 +15,76 @@ const MENSAJE: Record<string, string> = {
   'Torneos': 'Hola GamerZone, quiero inscribirme en el próximo torneo. ¿Cuándo es?',
 };
 ---
-<section class="seccion" id="planes" aria-labelledby="t-planes">
+<section class="seccion planes-seccion" id="planes" aria-labelledby="t-planes">
   <div class="envoltura">
-    <h2 class="titulo" id="t-planes">Planes en grupo</h2>
+    <h2 class="titulo" id="t-planes">Tu grupo. Tu espacio.</h2>
   </div>
-  <div class="envoltura planes cascada">
-    {PLANES.map((p) => (
-      <a class="plan" href={whatsapp(MENSAJE[p.titulo] ?? `Hola GamerZone, quiero información sobre ${p.titulo.toLowerCase()}.`)} target="_blank" rel="noopener">
-        <Picture src={fotos[`../../assets/galeria/${p.foto}.webp`]} formats={['avif']} fallbackFormat="webp" widths={[400, 640]} sizes="(min-width: 48rem) 24rem, 100vw" loading="lazy" alt={p.alt} />
-        <div class="plan-cuerpo">
-          <h3>{p.titulo}</h3>
-          <p><Dato pendiente={p.pendiente}>{p.texto}</Dato></p>
-          <span class="plan-accion"><WhatsAppIcon /> Escríbenos</span>
-        </div>
-      </a>
-    ))}
+  <div class="planes-carril">
+    <div class="planes">
+      {PLANES.map((p) => (
+        <a class="plan" href={whatsapp(MENSAJE[p.titulo] ?? `Hola GamerZone, quiero información sobre ${p.titulo.toLowerCase()}.`)} target="_blank" rel="noopener">
+          <Picture src={fotos[`../../assets/galeria/${p.foto}.webp`]} formats={['avif']} fallbackFormat="webp" widths={[400, 640]} sizes="(min-width: 48rem) 24rem, 85vw" loading="lazy" alt={p.alt} />
+          <div class="plan-cuerpo">
+            <h3>{p.titulo}</h3>
+            <p><Dato pendiente={p.pendiente}>{p.texto}</Dato></p>
+            <span class="plan-accion"><WhatsAppIcon /> Escríbenos</span>
+          </div>
+        </a>
+      ))}
+    </div>
   </div>
 </section>
 
 <style>
-  /* Afiches verticales con la foto real a sangre; todo el afiche es el enlace */
-  .planes { display: grid; gap: 1.25rem; margin-top: 2.25rem; }
+  .planes-seccion { overflow: hidden; }
+
+  .planes-carril { overflow: hidden; }
+  .planes {
+    display: flex; gap: 1.25rem;
+    padding-inline: var(--gutter);
+  }
   .plan {
-    position: relative; isolation: isolate; display: block; aspect-ratio: 4 / 5; border-radius: var(--radio); overflow: hidden;
-    background: #0b0d12; color: var(--texto-noche); text-decoration: none; box-shadow: 0 30px 60px -30px rgba(16, 21, 28, 0.6);
+    position: relative; isolation: isolate; display: block; flex: none;
+    width: min(85vw, 28rem); aspect-ratio: 4 / 5; border-radius: 1.25rem; overflow: hidden;
+    background: #0b0d12; color: var(--texto-noche); text-decoration: none;
+    box-shadow: 0 4px 12px -4px rgba(16, 21, 28, 0.2), 0 20px 50px -20px rgba(16, 21, 28, 0.5);
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
   }
-  .plan:hover { transform: translateY(-6px); box-shadow: 0 40px 70px -30px rgba(16, 21, 28, 0.7); }
+  .plan:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.35), 0 40px 70px -20px rgba(0, 0, 0, 0.55); }
   .plan :global(picture), .plan :global(img) { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-  .plan:hover :global(img) { transform: scale(1.06); }
+  .plan:hover :global(img) { transform: scale(1.08); }
   .plan::after {
     content: ''; position: absolute; inset: 0; z-index: -1;
-    background: linear-gradient(to top, rgba(7, 9, 15, 0.95) 0%, rgba(7, 9, 15, 0.7) 40%, rgba(7, 9, 15, 0) 70%);
+    background: linear-gradient(to top, rgba(7, 9, 15, 0.96) 0%, rgba(7, 9, 15, 0.65) 35%, rgba(7, 9, 15, 0) 65%);
   }
+  .plan::before {
+    content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit;
+    border: 1px solid color-mix(in srgb, #fff 8%, transparent);
+    transition: border-color 0.4s ease;
+  }
+  .plan:hover::before { border-color: color-mix(in srgb, var(--cian) 30%, transparent); }
   .plan-cuerpo { position: absolute; inset: auto 0 0; padding: 1.5rem 1.5rem 1.6rem; }
   .plan h3 { font-size: var(--t-l); }
   .plan p { color: color-mix(in srgb, var(--texto-noche) 78%, transparent); margin-top: 0.5rem; font-size: var(--t-s); }
   .plan-accion {
-    display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 1rem; padding: 0.5rem 0.9rem; border-radius: 999px;
-    font-weight: 650; font-size: var(--t-s); background: color-mix(in srgb, #fff 12%, transparent); backdrop-filter: blur(6px);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 1rem; padding: 0.55rem 1rem; border-radius: 999px;
+    font-weight: 600; font-size: var(--t-s); background: color-mix(in srgb, #fff 12%, transparent); backdrop-filter: blur(8px);
+    border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+    transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
   }
   .plan-accion :global(svg) { width: 1rem; height: 1rem; }
-  .plan:hover .plan-accion { background: var(--cian); color: #04191a; }
+  .plan:hover .plan-accion { background: var(--acento); color: #fff; border-color: transparent; }
 
-  @media (min-width: 48rem) { .planes { grid-template-columns: repeat(3, 1fr); } }
+  /* Mobile: native horizontal snap scroll */
+  @media (max-width: 63.99rem) {
+    .planes-carril { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .planes-carril::-webkit-scrollbar { display: none; }
+    .planes { width: max-content; scroll-snap-type: x mandatory; padding-right: var(--gutter); }
+    .plan { scroll-snap-align: center; }
+  }
+
+  /* Desktop: GSAP will pin and translate .planes */
+  @media (min-width: 64rem) {
+    .planes { width: max-content; }
+  }
 </style>

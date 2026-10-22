@@ -11,9 +11,9 @@ const CUERPO = 'M62 66C40 66 28 80 22 102C14 132 12 156 28 162C41 167 51 154 61 
 const ALTO = 14;          // grosor del cuerpo
 const BISEL = 9;          // bisel del canto (redondea los bordes)
 const FRENTE = BISEL;     // la cara de arriba queda en z = BISEL tras voltear la extrusión
-const CIAN = new THREE.Color('#52f2f2');
-const VIOLETA = new THREE.Color('#7b4dff');
-const ROSA = new THREE.Color('#ff4f9a');
+const CIAN = new THREE.Color('#2563EB');
+const VIOLETA = new THREE.Color('#3B82F6');
+const ROSA = new THREE.Color('#60A5FA');
 
 // Coordenadas del SVG (y hacia abajo) a la escena (y hacia arriba)
 const en = (x: number, y: number, z = FRENTE) => new THREE.Vector3(x, -y, z);

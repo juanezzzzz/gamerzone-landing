@@ -1,14 +1,28 @@
 ---
-// Tarifas: banda oscura con la carta por hora y los paquetes; cada paquete abre WhatsApp con su mensaje.
+// Tarifas: los 3 pasos se revelan en secuencia pinned, luego la carta y paquetes entran.
 import Dato from '../Dato.astro';
-import { TARIFAS, PAQUETES } from '../../data/local';
+import { TARIFAS, PAQUETES, PASOS } from '../../data/local';
 import { whatsapp } from '../../lib/sitio';
 ---
-<section class="seccion tarifas-banda" id="tarifas" aria-labelledby="t-tarifas">
-  <div class="envoltura tarifas">
+<section class="tarifas-banda" id="tarifas" aria-labelledby="t-tarifas">
+  <!-- Intro pinned: los 3 pasos ocupan el viewport uno a uno -->
+  <div class="tarifas-pin">
+    <div class="pasos-escena">
+      {PASOS.map((p, i) => (
+        <article class="paso-panel" data-paso={i}>
+          <span class="paso-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="paso-titulo">{p.titulo}</h3>
+          <p class="paso-texto"><Dato pendiente>{p.texto}</Dato></p>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <!-- Carta + paquetes: aparecen después del pin -->
+  <div class="envoltura tarifas-cuerpo">
     <div class="tarifas-cabeza">
-      <h2 class="titulo" id="t-tarifas">Tarifas</h2>
-      <p class="entrada">Pagas por el tiempo que juegues, al salir.</p>
+      <h2 class="titulo" id="t-tarifas">Precios</h2>
+      <p class="entrada">Paga por el tiempo que juegues. Sin sorpresas.</p>
     </div>
 
     <div class="carta">
@@ -40,55 +54,97 @@ import { whatsapp } from '../../lib/sitio';
 </section>
 
 <style>
-  /* Banda oscura, como la sala del inicio */
   .tarifas-banda {
     position: relative; overflow: hidden; color: var(--texto-noche); border-top: 0;
-    background: radial-gradient(50rem 30rem at 85% 0%, color-mix(in srgb, var(--cian) 10%, transparent), transparent 70%),
-      radial-gradient(40rem 26rem at 0% 100%, color-mix(in srgb, #7b4dff 10%, transparent), transparent 70%), var(--noche);
+    background: var(--noche);
   }
   .tarifas-banda + :global(.seccion) { border-top: 0; }
-  .tarifas-banda .entrada { color: var(--gris-noche); }
-  .tarifas { display: grid; gap: 2.5rem; }
 
-  .carta { padding: 1.75rem; border-radius: 1.25rem; background: color-mix(in srgb, #fff 4%, transparent); border: 1px solid color-mix(in srgb, #fff 9%, transparent); }
-  .carta-rotulo, .paquete-sello { font-size: var(--t-xs); font-weight: 650; font-stretch: 115%; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cian); }
+  /* --- Pinned step reveal --- */
+  .tarifas-pin {
+    position: relative; min-height: 100svh; display: grid; place-items: center;
+    padding: var(--gutter);
+  }
+  .pasos-escena { position: relative; display: grid; place-items: center; text-align: center; }
+  .paso-panel {
+    grid-area: 1 / 1; opacity: 0; pointer-events: none;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  }
+  .paso-panel[data-paso="0"] { opacity: 1; pointer-events: auto; }
+  .paso-num {
+    font: 400 clamp(6rem, 18vw, 14rem)/0.85 var(--fd); letter-spacing: -0.05em;
+    color: var(--acento);
+  }
+  .paso-titulo {
+    font-size: clamp(var(--t-xl), 4vw, var(--t-xxl));
+    letter-spacing: -0.02em; margin-top: 0.5rem;
+  }
+  .paso-texto {
+    color: var(--gris-noche); font-size: var(--t-m); max-width: 38ch; line-height: 1.5; margin-top: 0.5rem;
+  }
+
+  /* --- Rate card + packages --- */
+  .tarifas-cuerpo {
+    display: grid; gap: 2.5rem;
+    padding-top: clamp(4rem, 8vw, 6rem);
+    padding-bottom: clamp(6rem, 12vw, 10rem);
+  }
+  .tarifas-cuerpo .entrada { color: var(--gris-noche); }
+
+  .carta {
+    padding: 1.75rem; border-radius: 1.25rem;
+    background: color-mix(in srgb, #fff 5%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .carta-rotulo, .paquete-sello { font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--violeta-claro); }
   .carta-lista { margin: 1rem 0 0; }
   .carta-fila { display: flex; align-items: baseline; gap: 0.75rem; padding-block: 1rem; }
   .carta-fila + .carta-fila { border-top: 1px solid color-mix(in srgb, #fff 8%, transparent); }
-  .carta-fila dt { font-weight: 650; font-stretch: 104%; letter-spacing: 0; color: var(--texto-noche); font-size: var(--t-base); }
+  .carta-fila dt { font-weight: 600; letter-spacing: 0; color: var(--texto-noche); font-size: var(--t-base); }
   .carta-fila dt span { display: block; font-weight: 400; font-size: var(--t-s); color: var(--gris-noche); margin-top: 0.1rem; }
-  /* Puntos guía, como en la carta de un restaurante */
   .carta-puntos { flex: 1; min-width: 1rem; border-bottom: 2px dotted color-mix(in srgb, #fff 18%, transparent); transform: translateY(-0.35em); }
-  .carta-fila dd { margin: 0; font: 850 var(--t-l)/1 var(--fd); font-stretch: 115%; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .carta-fila dd { margin: 0; font: 400 var(--t-l)/1 var(--fd); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--rosa); }
 
   .paquetes { display: grid; gap: 1.25rem; }
   .paquete {
     position: relative; display: flex; flex-direction: column; padding: 1.75rem; border-radius: 1.25rem;
-    background: color-mix(in srgb, #fff 4%, transparent); border: 1px solid color-mix(in srgb, #fff 9%, transparent);
+    background: color-mix(in srgb, #fff 5%, transparent); border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+    backdrop-filter: blur(12px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.3s ease;
   }
+  .paquete:hover { transform: translateY(-3px); border-color: color-mix(in srgb, #fff 18%, transparent); }
   .paquete.destacado {
-    background: linear-gradient(160deg, color-mix(in srgb, var(--cian) 16%, #0e1320), #0b0e17);
-    border-color: color-mix(in srgb, var(--cian) 45%, transparent);
-    box-shadow: 0 30px 70px -30px color-mix(in srgb, var(--cian) 45%, transparent);
+    background: var(--superficie-2);
+    border-color: color-mix(in srgb, var(--acento) 35%, transparent);
   }
+  .paquete.destacado:hover { transform: translateY(-4px); }
   .paquete h3 { font-size: var(--t-l); margin-top: 0.4rem; }
   .paquete-sello { margin-bottom: 0.2rem; }
-  .paquete-precio { margin-top: 1rem; font: 850 clamp(2.5rem, 5vw, 3.4rem)/1 var(--fd); font-stretch: 125%; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-  .paquete-ahorro { margin-top: 0.4rem; color: var(--cian); font-weight: 600; font-size: var(--t-s); }
+  .paquete-precio { margin-top: 1rem; font: 400 clamp(2.8rem, 5.5vw, 3.8rem)/1 var(--fd); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--texto-noche); }
+  .destacado .paquete-precio { color: var(--rosa); }
+  .paquete-ahorro { margin-top: 0.4rem; color: var(--violeta-claro); font-weight: 600; font-size: var(--t-s); }
   .paquete ul { list-style: none; margin: 1.25rem 0 1.75rem; padding: 0; display: grid; gap: 0.55rem; color: color-mix(in srgb, var(--texto-noche) 82%, transparent); font-size: var(--t-s); }
   .paquete li { position: relative; padding-left: 1.5rem; }
   .paquete li::before {
     content: ''; position: absolute; left: 0.1rem; top: 0.35em; width: 0.75rem; height: 0.42rem;
     border-left: 2px solid var(--cian); border-bottom: 2px solid var(--cian); transform: rotate(-45deg);
   }
-  .paquete-boton { margin-top: auto; width: 100%; text-align: center; white-space: nowrap; background: transparent; color: var(--texto-noche); border-color: color-mix(in srgb, #fff 25%, transparent); }
-  .paquete-boton:hover { border-color: var(--cian); }
-  .destacado .paquete-boton { background: var(--cian); color: #04191a; border-color: transparent; }
-  .destacado .paquete-boton:hover { background: #8ef7f7; }
+  .paquete-boton { margin-top: auto; width: 100%; text-align: center; white-space: nowrap; }
+  .destacado .paquete-boton { background: var(--acento); color: #fff; border-color: transparent; }
+  .destacado .paquete-boton:hover { background: var(--acento-claro); }
 
   @media (min-width: 48rem) { .paquetes { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 64rem) {
-    .tarifas { grid-template-columns: 1fr 1.25fr; gap: 2.5rem 3rem; align-items: start; }
+    .tarifas-cuerpo { grid-template-columns: 1fr 1.25fr; gap: 2.5rem 3rem; align-items: start; }
     .tarifas-cabeza { grid-column: 1 / -1; }
+  }
+
+  /* Mobile: no pin, stack steps visibly */
+  @media (max-width: 63.99rem) {
+    .tarifas-pin { min-height: auto; padding-block: clamp(4rem, 8vw, 6rem); }
+    .pasos-escena { display: flex; flex-direction: column; gap: 3rem; }
+    .paso-panel { opacity: 1; pointer-events: auto; }
+    .paso-num { font-size: clamp(3.5rem, 12vw, 6rem); }
   }
 </style>

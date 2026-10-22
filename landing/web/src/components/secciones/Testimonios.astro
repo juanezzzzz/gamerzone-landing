@@ -1,0 +1,50 @@
+---
+const testimonios = [
+  { texto: 'Nada que ver con un café internet. Las torres son de otro nivel y el ambiente es brutal.', nombre: 'Sebastián', rol: 'Jugador frecuente', pendiente: true },
+  { texto: 'Vine con mi parche un sábado y terminamos quedándonos toda la tarde. La sala privada es lo mejor.', nombre: 'Valentina', rol: 'Cliente', pendiente: true },
+  { texto: 'Los monitores de 144 Hz se sienten. Si juegas competitivo acá se nota la diferencia.', nombre: 'Andrés', rol: 'Jugador de Valorant', pendiente: true },
+];
+---
+<section class="seccion" id="testimonios" aria-labelledby="t-testimonios">
+  <div class="envoltura">
+    <h2 class="titulo" id="t-testimonios">Lo que dicen</h2>
+    <div class="testimonios-grid">
+      {testimonios.map(t => (
+        <blockquote class="testimonio">
+          <div class="estrellas" aria-label="5 estrellas">★★★★★</div>
+          <p class="testimonio-texto">"{t.texto}"</p>
+          <footer class="testimonio-autor">
+            <span class="testimonio-nombre">{t.nombre}</span>
+            <span class="testimonio-rol">{t.rol}</span>
+          </footer>
+        </blockquote>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonios-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  .testimonio {
+    margin: 0; padding: 2rem;
+    background: var(--superficie);
+    border: 1px solid var(--linea);
+    border-radius: 0.75rem;
+  }
+  .estrellas { color: var(--acento); font-size: var(--t-base); letter-spacing: 0.1em; }
+  .testimonio-texto {
+    margin-top: 1rem;
+    font-size: var(--t-m); line-height: 1.5;
+    color: var(--texto);
+  }
+  .testimonio-autor { display: flex; flex-direction: column; gap: 0.15rem; margin-top: 1.25rem; }
+  .testimonio-nombre { font-weight: 600; font-size: var(--t-s); color: var(--texto); }
+  .testimonio-rol { font-size: var(--t-xs); color: var(--texto-secundario); }
+
+  @media (min-width: 48rem) {
+    .testimonios-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

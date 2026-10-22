@@ -1,0 +1,53 @@
+---
+import Dato from '../Dato.astro';
+import { ESTACIONES, JUEGOS, HORARIO } from '../../data/local';
+import { DIAS_ABIERTO } from '../../lib/sitio';
+
+const cifras = [
+  { valor: `${ESTACIONES.reduce((s, e) => s + Number(e.puesto), 0)}+`, label: 'Estaciones', pendiente: false },
+  { valor: `${JUEGOS.lista.length}+`, label: 'Juegos', pendiente: JUEGOS.pendiente },
+  { valor: '144 Hz', label: 'Refresh rate', pendiente: false },
+  { valor: '1 Gbps', label: 'Fibra óptica', pendiente: false },
+  { valor: `${DIAS_ABIERTO}`, label: 'Días a la semana', pendiente: HORARIO.pendiente },
+];
+---
+<section class="cifras-barra" aria-label="Cifras del local">
+  <div class="envoltura">
+    <dl class="cifras-grilla">
+      {cifras.map(c => (
+        <div class="cifra-item">
+          <dd><Dato pendiente={c.pendiente}>{c.valor}</Dato></dd>
+          <dt>{c.label}</dt>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .cifras-barra {
+    position: relative; z-index: 2;
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--linea);
+  }
+  .cifras-grilla {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem 3.5rem;
+    margin: 0; padding: 0;
+  }
+  .cifra-item { text-align: center; }
+  .cifra-item dd {
+    margin: 0;
+    font: 700 clamp(2rem, 4vw, 3rem)/1 var(--fd);
+    letter-spacing: -0.02em;
+    color: var(--texto);
+  }
+  .cifra-item dt {
+    margin-top: 0.35rem;
+    font-size: var(--t-xs); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--texto-secundario);
+  }
+
+  @media (min-width: 64rem) {
+    .cifras-grilla { gap: 2rem 5rem; }
+  }
+</style>

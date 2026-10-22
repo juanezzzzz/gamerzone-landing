@@ -20,13 +20,13 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
     </div>
 
     <div class="inicio-texto">
-      <h1 class="inicio-titulo" aria-label="¿Listo para jugar?">
-        <span class="palabra" aria-hidden="true"><span class="colgado">¿</span>Listo</span>
-        <span class="palabra" aria-hidden="true">para</span>
-        <span class="palabra" aria-hidden="true">jugar?</span>
+      <h1 class="inicio-titulo" aria-label="Juega a otro nivel">
+        <span class="palabra" aria-hidden="true">Juega</span>
+        <span class="palabra" aria-hidden="true">a otro</span>
+        <span class="palabra" aria-hidden="true">nivel.</span>
       </h1>
       <p class="inicio-entrada aparece">
-        Sala gamer en <Dato pendiente={NEGOCIO.ciudad.pendiente}>{NEGOCIO.ciudad.texto}</Dato> con PC gamer, consolas Xbox, fútbol en pantalla grande y salas para grupos.
+        PC Gaming. Consolas. Salas privadas. Una experiencia diseñada para jugar, competir y compartir en <Dato pendiente={NEGOCIO.ciudad.pendiente}>{NEGOCIO.ciudad.texto}</Dato>.
       </p>
       <div class="botones aparece">
         <a class="boton boton-principal" href={WA} target="_blank" rel="noopener"><WhatsAppIcon /> Escríbenos por WhatsApp</a>
@@ -41,14 +41,14 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
         <div class="cifra"><dt>días a la semana</dt><dd><Dato pendiente={HORARIO.pendiente}>{DIAS_ABIERTO}</Dato></dd></div>      </dl>
     </div>
   </div>
-  <p class="pista" aria-hidden="true"><span></span>Desliza para encender la sala</p>
+  <p class="pista" aria-hidden="true"><span></span>Explorar experiencias</p>
 </section>
 
 <style>
   .inicio {
     position: relative; min-height: 100svh; display: flex; align-items: center; overflow: hidden;
-    background: radial-gradient(60rem 40rem at 75% 40%, color-mix(in srgb, var(--cian) 9%, transparent), transparent 70%), var(--noche);
-    color: var(--texto-noche);
+    background: var(--noche);
+    color: var(--texto);
   }
   /* Grano de película, solo en la sala */
   .inicio::after {
@@ -65,12 +65,11 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
   .letrero-marco { position: relative; }
   .letrero-movil { position: relative; will-change: transform; }
   .derrame {
-    position: absolute; inset: -30% -25%; z-index: 0; pointer-events: none; filter: blur(30px);
-    background:
-      radial-gradient(45% 45% at 50% 52%, color-mix(in srgb, var(--cian) 24%, transparent), transparent 70%),
-      radial-gradient(28% 30% at 66% 26%, color-mix(in srgb, #ff4f5e 12%, transparent), transparent 70%),
-      radial-gradient(28% 30% at 34% 26%, color-mix(in srgb, #7b4dff 10%, transparent), transparent 70%);
+    position: absolute; inset: -30% -25%; z-index: 0; pointer-events: none; filter: blur(40px);
+    background: radial-gradient(45% 45% at 50% 52%, color-mix(in srgb, var(--acento) 14%, transparent), transparent 70%);
+    animation: respira-derrame 6s ease-in-out infinite alternate;
   }
+  @keyframes respira-derrame { to { opacity: 0.7; filter: blur(50px); } }
   /* El control en 3D: el lienzo WebGL va encima de su imagen fija y la reemplaza cuando ya pintó */
   .control3d { position: relative; z-index: 1; aspect-ratio: 16 / 10; }
   .control3d-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity 0.4s ease; }
@@ -83,30 +82,28 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
   }
 
   .inicio-texto { position: relative; z-index: 2; }
-  .inicio-titulo { font-size: var(--t-xxl); font-weight: 850; font-stretch: 125%; line-height: 0.9; text-transform: uppercase; letter-spacing: -0.035em; }
+  .inicio-titulo {
+    font-size: var(--t-xxl); line-height: 0.9; letter-spacing: -0.035em;
+    color: #fff;
+  }
   .palabra { display: inline-block; }
   /* Puntuación colgada: el «¿» queda fuera del margen para que las letras alineen con el texto */
   @media (min-width: 48rem) { .colgado { margin-left: -0.5em; } }
-  .inicio-entrada { margin-top: 1.25rem; font-size: var(--t-m); line-height: 1.5; max-width: 34ch; color: color-mix(in srgb, var(--texto-noche) 80%, transparent); }
+  .inicio-entrada { margin-top: 1.25rem; font-size: var(--t-m); line-height: 1.5; max-width: 34ch; color: var(--gris-noche); }
 
-  /* En celular la barra fija ya lleva WhatsApp y Cómo llegar */
   .botones { display: none; }
-  .boton-principal { background: var(--cian); color: #04191a; }
-  .boton-principal:hover { background: #8ef7f7; }
-  .boton-secundario { background: transparent; color: var(--texto-noche); border-color: color-mix(in srgb, var(--texto-noche) 28%, transparent); }
-  .boton-secundario:hover { border-color: var(--cian); }
 
   /* Cifras del local y la dirección, en una sola franja bajo el título */
-  .datos-rapidos { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem 2rem; margin: 1.75rem 0 0; padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, var(--texto-noche) 12%, transparent); }
-  .datos-rapidos dt { color: var(--gris-noche); }
+  .datos-rapidos { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1.25rem 2.5rem; margin: 2rem 0 0; padding-top: 1.5rem; border-top: 1px solid color-mix(in srgb, var(--texto-noche) 12%, transparent); }
+  .datos-rapidos dt { color: var(--gris-noche); letter-spacing: 0.06em; }
   .datos-rapidos dd { margin: 0; }
   .cifra { display: flex; flex-direction: column-reverse; }
-  .cifra dd { font: 850 clamp(1.75rem, 3.2vw, 2.4rem)/1 var(--fd); font-stretch: 125%; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .cifra dd { font: 400 clamp(2rem, 3.6vw, 2.8rem)/1 var(--fd); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--rosa); }
   .cifra dt { margin-top: 0.3rem; }
 
   .pista {
     display: none; position: absolute; left: 50%; bottom: calc(3.5rem + var(--barra-movil)); translate: -50% 0; z-index: 2;
-    align-items: center; gap: 0.65rem; font-size: var(--t-xs); font-stretch: 108%; letter-spacing: 0.03em; color: var(--gris-noche); white-space: nowrap;
+    align-items: center; gap: 0.65rem; font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris-noche); white-space: nowrap;
   }
   .pista span { width: 1px; height: 2.2rem; background: linear-gradient(var(--cian), transparent); transform-origin: top; animation: pista 1.8s ease-in-out infinite; }
   @keyframes pista { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }

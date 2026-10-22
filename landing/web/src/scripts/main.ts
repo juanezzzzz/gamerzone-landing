@@ -37,8 +37,10 @@ export function iniciar() {
   escenaInicio();
 
   cuandoLibre(async () => {
-    const [r, v] = await Promise.all([import('./efectos/recorrido'), import('./efectos/revelaciones')]);
+    const [r, v, t, p] = await Promise.all([import('./efectos/recorrido'), import('./efectos/revelaciones'), import('./efectos/tarifas'), import('./efectos/planes')]);
     v.revelaciones();
+    t.tarifasPinned();
+    p.planesScroll();
     await r.recorridoEstaciones();
     ScrollTrigger.refresh();
   });
