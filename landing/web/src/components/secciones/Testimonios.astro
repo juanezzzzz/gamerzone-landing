@@ -5,46 +5,143 @@ const testimonios = [
   { texto: 'Los monitores de 144 Hz se sienten. Si juegas competitivo acá se nota la diferencia.', nombre: 'Andrés', rol: 'Jugador de Valorant', pendiente: true },
 ];
 ---
-<section class="seccion" id="testimonios" aria-labelledby="t-testimonios">
-  <div class="envoltura">
-    <h2 class="titulo" id="t-testimonios">Lo que dicen</h2>
-    <div class="testimonios-grid">
-      {testimonios.map(t => (
-        <blockquote class="testimonio">
-          <div class="estrellas" aria-label="5 estrellas">★★★★★</div>
-          <p class="testimonio-texto">"{t.texto}"</p>
+<section class="testimonio-seccion" id="testimonios" aria-labelledby="t-testimonios">
+  <div class="testimonio-inner">
+    <span class="testimonio-label" id="t-testimonios">Lo que dicen</span>
+    <span class="testimonio-comilla" aria-hidden="true">"</span>
+    <div class="testimonio-carrusel">
+      {testimonios.map((t, i) => (
+        <blockquote class:list={['testimonio-slide', { activo: i === 0 }]} data-slide={i}>
+          <p class="testimonio-texto">{t.texto}</p>
           <footer class="testimonio-autor">
+            <span class="testimonio-linea" aria-hidden="true"></span>
             <span class="testimonio-nombre">{t.nombre}</span>
             <span class="testimonio-rol">{t.rol}</span>
           </footer>
         </blockquote>
       ))}
     </div>
+    <div class="testimonio-nav" aria-label="Testimonios">
+      {testimonios.map((_, i) => (
+        <button class:list={['testimonio-dot', { activo: i === 0 }]} data-goto={i} aria-label={`Testimonio ${i + 1}`}></button>
+      ))}
+    </div>
+    <span class="testimonio-indice"><span class="testimonio-actual">01</span> / <span class="testimonio-total">03</span></span>
   </div>
 </section>
 
-<style>
-  .testimonios-grid {
-    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
-    margin-top: clamp(2rem, 4vw, 3rem);
-  }
-  .testimonio {
-    margin: 0; padding: 2rem;
-    background: var(--superficie);
-    border: 1px solid var(--linea);
-    border-radius: 0.75rem;
-  }
-  .estrellas { color: var(--acento); font-size: var(--t-base); letter-spacing: 0.1em; }
-  .testimonio-texto {
-    margin-top: 1rem;
-    font-size: var(--t-m); line-height: 1.5;
-    color: var(--texto);
-  }
-  .testimonio-autor { display: flex; flex-direction: column; gap: 0.15rem; margin-top: 1.25rem; }
-  .testimonio-nombre { font-weight: 600; font-size: var(--t-s); color: var(--texto); }
-  .testimonio-rol { font-size: var(--t-xs); color: var(--texto-secundario); }
+<script>
+  const slides = document.querySelectorAll<HTMLElement>('.testimonio-slide');
+  const dots = document.querySelectorAll<HTMLElement>('.testimonio-dot');
+  let actual = 0;
+  let timer: ReturnType<typeof setInterval>;
 
-  @media (min-width: 48rem) {
-    .testimonios-grid { grid-template-columns: repeat(3, 1fr); }
+  const indice = document.querySelector<HTMLElement>('.testimonio-actual');
+
+  function ir(n: number) {
+    slides[actual].classList.remove('activo');
+    dots[actual].classList.remove('activo');
+    actual = n;
+    slides[actual].classList.add('activo');
+    dots[actual].classList.add('activo');
+    if (indice) indice.textContent = String(actual + 1).padStart(2, '0');
+  }
+
+  function siguiente() { ir((actual + 1) % slides.length); }
+
+  function iniciarTimer() {
+    clearInterval(timer);
+    timer = setInterval(siguiente, 5000);
+  }
+
+  dots.forEach(d => d.addEventListener('click', () => {
+    ir(Number(d.dataset.goto));
+    iniciarTimer();
+  }));
+
+  iniciarTimer();
+</script>
+
+<style>
+  .testimonio-seccion {
+    position: relative; overflow: hidden;
+    padding-block: clamp(6rem, 14vw, 12rem);
+    background: var(--superficie);
+    border-top: 1px solid var(--linea);
+    border-bottom: 1px solid var(--linea);
+  }
+  .testimonio-inner {
+    position: relative;
+    width: min(100% - 2 * var(--gutter), 52rem); margin-inline: auto;
+    text-align: center;
+  }
+
+  .testimonio-label {
+    display: block;
+    font: 500 var(--t-xs) var(--fm);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--texto-secundario);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .testimonio-comilla {
+    display: block;
+    font: 700 clamp(6rem, 14vw, 10rem)/0.7 var(--fd);
+    color: var(--acento); opacity: 0.15;
+    margin-bottom: -0.5rem;
+    user-select: none;
+  }
+
+  .testimonio-carrusel { position: relative; min-height: 14rem; }
+  .testimonio-slide {
+    position: absolute; inset: 0; margin: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; transform: translateY(1.5rem);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .testimonio-slide.activo {
+    position: relative;
+    opacity: 1; transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .testimonio-texto {
+    font: 300 clamp(1.5rem, 3.5vw, 2.5rem)/1.35 var(--fd);
+    color: var(--texto); letter-spacing: -0.015em;
+    max-width: 28ch;
+    font-style: italic;
+  }
+  .testimonio-autor {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+  .testimonio-linea {
+    display: block; width: 2rem; height: 1px;
+    background: var(--texto-secundario); opacity: 0.4;
+  }
+  .testimonio-nombre {
+    font: 600 var(--t-sm) var(--ft);
+    color: var(--texto); letter-spacing: 0.02em;
+  }
+  .testimonio-rol {
+    font: 400 var(--t-xs) var(--fm);
+    color: var(--texto-secundario); text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  .testimonio-nav { display: flex; justify-content: center; gap: 0.6rem; margin-top: 2.5rem; }
+  .testimonio-dot {
+    width: 2.5rem; height: 2px; border: 0; border-radius: 1px; padding: 0; cursor: pointer;
+    background: rgba(255, 255, 255, 0.12);
+    transition: background 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .testimonio-dot.activo { background: var(--acento); transform: scaleX(1.4); }
+  .testimonio-dot:hover { background: rgba(255, 255, 255, 0.25); }
+
+  .testimonio-indice {
+    display: block;
+    font: 400 var(--t-xs) var(--fm);
+    color: var(--texto-secundario); opacity: 0.5;
+    margin-top: 1.5rem; letter-spacing: 0.1em;
   }
 </style>

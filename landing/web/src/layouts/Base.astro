@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
-// Fonts loaded via Google Fonts @import in global.css (Sora + DM Sans)
 import { REVISION, NEGOCIO, HORARIO } from '../data/local';
+import { WA } from '../lib/sitio';
 const titulo = `${NEGOCIO.nombre} · Sala gamer en ${NEGOCIO.ciudad.texto}`;
 const descripcion = 'PC gamer, consolas Xbox, fútbol en pantalla grande y salas para el parche. Escríbenos por WhatsApp o mira cómo llegar.';
 // Absoluta cuando astro.config tenga `site` (el dominio aún no está definido).
@@ -50,6 +50,7 @@ const negocioLocal = {
 </head>
 <body>
   <slot />
+  <a class="cta-movil" href={WA} target="_blank" rel="noopener">Reservar sesión</a>
   <script>
     import { iniciar } from '../scripts/main';
     iniciar();

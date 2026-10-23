@@ -1,5 +1,6 @@
 import { gsap, ScrollTrigger } from '../base/gsap';
 import type { PantallaGL } from './pantalla-gl';
+import { transicion } from '../sonido';
 
 const ESCRITORIO = '(min-width: 64rem)';
 const hayWebGL = () => { try { return !!document.createElement('canvas').getContext('webgl'); } catch { return false; } };
@@ -59,6 +60,7 @@ export async function recorridoEstaciones() {
       previo = antes;
       gsap.delayedCall(1.3, () => { if (previo === antes) { previo = -1; reproducir(); } });
       cambiarVideo(antes, i);
+      transicion();
       gsap.timeline()
         .to(num, { yPercent: i > antes ? -40 : 40, opacity: 0, duration: 0.25, ease: 'power2.in' })
         .call(() => { num.textContent = paneles[i].dataset.puesto ?? ''; if (nombre) nombre.textContent = paneles[i].dataset.nombre ?? ''; })

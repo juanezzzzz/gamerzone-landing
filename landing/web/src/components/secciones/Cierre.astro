@@ -1,5 +1,4 @@
 ---
-// El cierre llena el viewport completo: tipografía a escala de pantalla, el control flotando.
 import Dato from '../Dato.astro';
 import WhatsAppIcon from '../WhatsAppIcon.astro';
 import { NEGOCIO, HORARIO } from '../../data/local';
@@ -8,7 +7,8 @@ import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
 <section class="cierre" id="cierre" aria-labelledby="t-cierre">
   <div class="cierre-fondo">
     <div class="cierre-contenido">
-      <h2 class="cierre-titulo" id="t-cierre">¿Listo para jugar?</h2>
+      <p class="cierre-etiqueta">Tu próxima partida empieza aquí</p>
+      <h2 class="cierre-titulo" id="t-cierre">¿Listo<br>para jugar?</h2>
       <div class="cierre-info">
         <p class="cierre-estado" data-estado>
           <span class="estado-punto" aria-hidden="true"></span>
@@ -17,20 +17,16 @@ import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
         <p class="cierre-donde">
           <Dato pendiente={NEGOCIO.direccion.pendiente}>{NEGOCIO.direccion.texto}</Dato>, <Dato pendiente={NEGOCIO.ciudad.pendiente}>{NEGOCIO.ciudad.texto}</Dato>
         </p>
-        <div class="botones">
-          <a class="boton boton-principal" href={WA} target="_blank" rel="noopener"><WhatsAppIcon /> Escríbenos por WhatsApp</a>
+        <div class="cierre-botones">
+          <a class="boton boton-principal boton-grande" href={WA} target="_blank" rel="noopener"><WhatsAppIcon /> Reservar sesión</a>
           <a class="boton boton-secundario" href={NEGOCIO.mapa} target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONO_PIN} />
             Cómo llegar
           </a>
         </div>
       </div>
-      <div class="cierre-control" aria-hidden="true">
-        <img src="/media/control-3d.webp" alt="" width="1120" height="896" loading="lazy" decoding="async" />
-      </div>
     </div>
   </div>
-  <!-- Grano de película -->
   <span class="cierre-grano" aria-hidden="true"></span>
 </section>
 
@@ -48,31 +44,28 @@ import { WA, FILAS_HORARIO, ICONO_PIN } from '../../lib/sitio';
   }
   .cierre-contenido {
     position: relative; z-index: 1;
-    display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem;
     max-width: var(--ancho); width: 100%;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  .cierre-etiqueta {
+    font: 500 var(--t-xs)/1 var(--fm); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--acento-claro); margin-bottom: 1.5rem;
   }
   .cierre-titulo {
-    font-size: clamp(3rem, 14vw, 12rem);
+    font-size: clamp(3.5rem, 16vw, 14rem);
     line-height: 0.85; letter-spacing: -0.04em;
     color: #fff;
   }
 
-  .cierre-estado { display: flex; align-items: center; gap: 0.6rem; font-size: clamp(var(--t-base), 2.4vw, var(--t-m)); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cierre-info { margin-top: clamp(2rem, 4vw, 3rem); }
+  .cierre-estado { display: flex; align-items: center; justify-content: center; gap: 0.6rem; font-size: clamp(var(--t-base), 2.4vw, var(--t-m)); font-weight: 600; font-variant-numeric: tabular-nums; }
   .estado-punto { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--gris-noche); flex: none; }
   .cierre-estado:global(.abierto) .estado-punto { background: #1fbf6a; box-shadow: 0 0 0 5px color-mix(in srgb, #1fbf6a 22%, transparent); }
   .cierre-estado:global(.pronto) .estado-punto { background: var(--cian); box-shadow: 0 0 0 5px color-mix(in srgb, var(--cian) 25%, transparent); }
   .cierre-donde { margin-top: 0.4rem; color: var(--gris-noche); font-size: var(--t-base); }
-  .botones { margin-top: 2.25rem; }
 
-  .cierre-control { position: relative; display: grid; place-items: center; }
-  .cierre-control::before {
-    content: ''; position: absolute; inset: 5% 0; pointer-events: none; filter: blur(40px);
-    background: radial-gradient(50% 50% at 50% 55%, rgba(255, 255, 255, 0.03), transparent 70%);
-  }
-  .cierre-control img { position: relative; width: 100%; max-width: 32rem; height: auto; }
-
-  @media (min-width: 64rem) {
-    .cierre-contenido { grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: center; }
-    .cierre-titulo { grid-column: 1 / -1; }
-  }
+  .cierre-botones { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 2.25rem; }
+  .boton-grande { min-height: 3.75rem; padding: 1rem 2.5rem; font-size: 1.1rem; }
 </style>

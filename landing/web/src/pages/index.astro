@@ -4,10 +4,11 @@ import Cabecera from '../components/secciones/Cabecera.astro';
 import Inicio from '../components/secciones/Inicio.astro';
 import Cifras from '../components/secciones/Cifras.astro';
 import Estaciones from '../components/secciones/Estaciones.astro';
+import Galeria from '../components/secciones/Galeria.astro';
+import Torneos from '../components/secciones/Torneos.astro';
 import Juegos from '../components/secciones/Juegos.astro';
 import Tarifas from '../components/secciones/Tarifas.astro';
 import Planes from '../components/secciones/Planes.astro';
-import Galeria from '../components/secciones/Galeria.astro';
 import Testimonios from '../components/secciones/Testimonios.astro';
 import Lugar from '../components/secciones/Lugar.astro';
 import Visitanos from '../components/secciones/Visitanos.astro';
@@ -21,10 +22,16 @@ import Pie from '../components/secciones/Pie.astro';
     <Inicio />
     <Cifras />
     <Estaciones />
+    <section class="declaracion" aria-label="Declaración">
+      <div class="envoltura">
+        <p class="declaracion-texto">No vendemos horas frente a un computador.<br><em>Vendemos una experiencia de gaming.</em></p>
+      </div>
+    </section>
+    <Galeria />
+    <Torneos />
     <Juegos />
     <Tarifas />
     <Planes />
-    <Galeria />
     <Testimonios />
     <Lugar />
     <Visitanos />

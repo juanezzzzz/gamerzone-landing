@@ -44,47 +44,55 @@ export const BOTONES: Record<Boton, { color: string; x: number; y: number }> = {
 export const MENSAJE_WA = 'Hola GamerZone, quiero ir a jugar. ¿Tienen puesto disponible?';
 
 export const ESTACIONES: {
-  id: string; puesto: string; boton: Boton; nombre: string; texto: string; incluye: string[]; luz: string; precio: Dato;
+  id: string; puesto: string; boton: Boton; nombre: string; subtitulo: string; texto: string; specs: string[]; incluye: string[]; luz: string; precio: Dato;
 }[] = [
   {
     id: 'pc',
     puesto: '07',
     boton: 'X',
-    nombre: 'PC gamer',
-    texto: 'Torres con RGB, teclado mecánico y audífonos con micrófono. Para el ranked, el competitivo o jugar con amigos en línea.',
+    nombre: 'PC Arena',
+    subtitulo: 'Rendimiento competitivo',
+    texto: 'Equipos armados para competir. Sin lag, sin excusas.',
+    specs: ['144 Hz', 'Mecánico', 'Low latency', '1 Gbps'],
     incluye: ['Monitor de 144 Hz', 'Teclado mecánico y mouse gamer', 'Audífonos con micrófono', 'Steam, Epic y Riot instalados'],
     luz: '#7B4DFF',
-    precio: { texto: '$3.000 la hora', pendiente: true },
+    precio: { texto: '$3.000 /h', pendiente: true },
   },
   {
     id: 'consolas',
     puesto: '11',
     boton: 'Y',
-    nombre: 'Consolas',
-    texto: 'Xbox con su biblioteca de juegos y controles listos. Siéntate, escoge el juego y dale.',
+    nombre: 'Console Lounge',
+    subtitulo: 'Juega acompañado',
+    texto: 'Xbox con Game Pass, dos controles y pantalla grande. Siéntate y dale.',
+    specs: ['Xbox', 'Game Pass', '50"', '2 controles'],
     incluye: ['Xbox con Game Pass', 'Dos controles por puesto', 'Pantalla de 50 pulgadas', 'Cooperativo y versus'],
     luz: '#52F2F2',
-    precio: { texto: '$5.000 la hora', pendiente: true },
+    precio: { texto: '$5.000 /h', pendiente: true },
   },
   {
     id: 'futbol',
     puesto: '03',
     boton: 'A',
     nombre: 'Fútbol',
-    texto: 'El partido en pantalla grande, uno contra uno o dos contra dos. La revancha se cobra el mismo día.',
+    subtitulo: 'Pantalla grande. Grandes partidas.',
+    texto: 'Uno contra uno o dos contra dos. La revancha se cobra el mismo día.',
+    specs: ['EA FC 25', 'Pantalla grande', '4 jugadores', 'Versus'],
     incluye: ['EA Sports FC al día', 'Pantalla grande', 'Hasta cuatro jugadores', 'Ligas y equipos actualizados'],
     luz: '#2BD97C',
-    precio: { texto: '$6.000 la hora', pendiente: true },
+    precio: { texto: '$6.000 /h', pendiente: true },
   },
   {
     id: 'salas',
     puesto: '12',
     boton: 'B',
-    nombre: 'Salas',
-    texto: 'Sofá, pantalla grande y espacio para el parche. Para jugar varios a la vez sin estar uno encima del otro.',
+    nombre: 'Sala VIP',
+    subtitulo: 'Tu juego. Tu espacio.',
+    texto: 'Sofá, pantalla de 65", cuatro controles y privacidad para el parche.',
+    specs: ['65"', '4 controles', 'Sofá', 'Privada'],
     incluye: ['Sofá para cuatro personas', 'Pantalla de 65 pulgadas', 'Consola con cuatro controles', 'Ideal para cumpleaños'],
     luz: '#FF4F9A',
-    precio: { texto: '$15.000 la hora', pendiente: true },
+    precio: { texto: '$15.000 /h', pendiente: true },
   },
 ];
 
@@ -117,6 +125,12 @@ export const PLANES: { titulo: string; texto: string; foto: string; alt: string;
   { titulo: 'Ven con tu parche', texto: 'Varios puestos juntos para jugar entre ustedes. Escríbenos con un día de anticipación y te los apartamos.', foto: 'consola-pareja', alt: 'Dos personas de espaldas jugando una carrera en pantalla dividida en el puesto 11', pendiente: true },
   { titulo: 'Cumpleaños', texto: 'Sala privada por dos o tres horas, pantalla grande y cuatro controles. Pregunta por el combo con bebidas.', foto: 'sala-sofa-azul', alt: 'Sala con luz azul y verde y una pantalla grande frente al sofá', pendiente: true },
   { titulo: 'Torneos', texto: 'Torneos de EA Sports FC y Fortnite cada mes, con premio para el campeón. Inscripciones por WhatsApp.', foto: 'jugadores-pc', alt: 'Jugador con audífonos concentrado frente a un PC', pendiente: true },
+];
+
+export const TORNEOS = [
+  { juego: 'Valorant', fecha: '25 Oct', hora: '2:00 p. m.', premio: 'Premio al campeón', inscripcion: 'WhatsApp', pendiente: true },
+  { juego: 'EA Sports FC', fecha: '1 Nov', hora: '3:00 p. m.', premio: 'Premio al campeón', inscripcion: 'WhatsApp', pendiente: true },
+  { juego: 'Fortnite', fecha: '8 Nov', hora: '2:00 p. m.', premio: 'Premio al campeón', inscripcion: 'WhatsApp', pendiente: true },
 ];
 
 // Cómo es ir a jugar, en el orden en que pasa.

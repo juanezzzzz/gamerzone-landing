@@ -6,6 +6,14 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
 ---
 <!-- La sala a oscuras y el control que se enciende con el scroll (efectos/inicio.ts + efectos/control3d.ts) -->
 <section class="inicio" id="inicio">
+  <!-- Video reel del local como fondo inmersivo -->
+  <div class="inicio-fondo" aria-hidden="true">
+    <video class="inicio-video" muted loop playsinline preload="none" data-auto-hero>
+      <source src="/media/clips/reel.webm" type='video/webm; codecs="av01.0.05M.08"' />
+      <source src="/media/clips/reel.mp4" type="video/mp4" />
+    </video>
+    <div class="inicio-overlay"></div>
+  </div>
   <div class="envoltura inicio-grilla">
     <div class="letrero-marco" aria-hidden="true">
       <div class="letrero-movil">
@@ -50,6 +58,24 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
     background: var(--noche);
     color: var(--texto);
   }
+  .inicio-fondo {
+    position: absolute; inset: 0; z-index: 0;
+  }
+  .inicio-video {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0; transition: opacity 1.2s ease;
+  }
+  .inicio-video:global(.visible) { opacity: 1; }
+  .inicio-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(8, 8, 8, 0.7) 0%,
+      rgba(8, 8, 8, 0.4) 40%,
+      rgba(8, 8, 8, 0.5) 70%,
+      rgba(8, 8, 8, 0.85) 100%
+    );
+  }
   /* Grano de película, solo en la sala */
   .inicio::after {
     content: ''; position: absolute; inset: -50%; z-index: 3; pointer-events: none; opacity: 0.06;
@@ -60,7 +86,7 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
     0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); }
     50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } 100% { transform: translate(0, 0); }
   }
-  .inicio-grilla { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; padding-block: 5rem 2rem; }
+  .inicio-grilla { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; padding-block: 6rem 3rem; }
 
   .letrero-marco { position: relative; }
   .letrero-movil { position: relative; will-change: transform; }
@@ -83,15 +109,15 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
 
   .inicio-texto { position: relative; z-index: 2; }
   .inicio-titulo {
-    font-size: var(--t-xxl); line-height: 0.9; letter-spacing: -0.035em;
+    font-size: clamp(3rem, 11vw, 7.5rem); line-height: 0.9; letter-spacing: -0.035em;
     color: #fff;
   }
-  .palabra { display: inline-block; }
+  .palabra { display: block; }
   /* Puntuación colgada: el «¿» queda fuera del margen para que las letras alineen con el texto */
   @media (min-width: 48rem) { .colgado { margin-left: -0.5em; } }
   .inicio-entrada { margin-top: 1.25rem; font-size: var(--t-m); line-height: 1.5; max-width: 34ch; color: var(--gris-noche); }
 
-  .botones { display: none; }
+  .botones { display: flex; }
 
   /* Cifras del local y la dirección, en una sola franja bajo el título */
   .datos-rapidos { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1.25rem 2.5rem; margin: 2rem 0 0; padding-top: 1.5rem; border-top: 1px solid color-mix(in srgb, var(--texto-noche) 12%, transparent); }
@@ -117,3 +143,22 @@ import { WA, ICONO_PIN, CUANTOS, DIAS_ABIERTO } from '../../lib/sitio';
     .control3d { aspect-ratio: 5 / 4; }
   }
 </style>
+
+<script>
+  {
+    const v = document.querySelector<HTMLVideoElement>('[data-auto-hero]');
+    if (v) {
+      const cargar = () => {
+        v.preload = 'auto';
+        v.play().then(() => v.classList.add('visible')).catch(() => {});
+      };
+      if (document.readyState === 'complete') {
+        requestIdleCallback?.(() => cargar()) ?? setTimeout(cargar, 2000);
+      } else {
+        window.addEventListener('load', () => {
+          requestIdleCallback?.(() => cargar()) ?? setTimeout(cargar, 2000);
+        }, { once: true });
+      }
+    }
+  }
+</script>

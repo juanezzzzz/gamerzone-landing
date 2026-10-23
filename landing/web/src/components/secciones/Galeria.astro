@@ -6,25 +6,29 @@ const fotos = Object.fromEntries(
 );
 
 const cuadricula = [
-  { foto: 'torres-rgb-completa', alt: 'Torre de PC con ventiladores RGB encendidos', span: 'grande' },
-  { foto: 'jugadores-pc', alt: 'Jugador con audífonos frente a un PC', span: 'normal' },
-  { foto: 'controles', alt: 'Controles de Xbox blancos y negros', span: 'normal' },
-  { foto: 'futbol-sala-verde', alt: 'Partido en pantalla grande con luz verde', span: 'normal' },
-  { foto: 'sala-sofa-azul', alt: 'Sala con pantalla grande frente al sofá', span: 'grande' },
-  { foto: 'mostrador-lampara', alt: 'Mostrador con la lámpara Game Zone', span: 'normal' },
+  { foto: 'torres-rgb-completa', alt: 'Torre de PC con ventiladores RGB encendidos', area: 'a', caption: 'PC Arena' },
+  { foto: 'jugadores-pc', alt: 'Jugador con audífonos frente a un PC', area: 'b', caption: 'En sesión' },
+  { foto: 'controles', alt: 'Controles de Xbox blancos y negros', area: 'c', caption: 'Consolas' },
+  { foto: 'futbol-sala-verde', alt: 'Partido en pantalla grande con luz verde', area: 'd', caption: 'Fútbol' },
+  { foto: 'sala-sofa-azul', alt: 'Sala con pantalla grande frente al sofá', area: 'e', caption: 'Lounge' },
+  { foto: 'mostrador-lampara', alt: 'Mostrador con la lámpara Game Zone', area: 'f', caption: 'Recepción' },
+  { foto: 'consola-pareja', alt: 'Pareja jugando en consola con pantalla grande', area: 'g', caption: 'Multijugador' },
+  { foto: 'letrero-gameroom', alt: 'Letrero iluminado del Game Room', area: 'h', caption: 'Game Room' },
 ];
 ---
-<section class="seccion" id="galeria" aria-labelledby="t-galeria">
-  <div class="envoltura">
+<section class="galeria-seccion" id="galeria" aria-labelledby="t-galeria">
+  <div class="envoltura galeria-cabeza">
+    <p class="galeria-label">Espacios y equipos</p>
     <h2 class="titulo" id="t-galeria">Galería</h2>
     <p class="entrada">Grabado y fotografiado en el local.</p>
   </div>
-  <div class="envoltura galeria-grid">
+  <div class="galeria-bleed">
     {cuadricula.map(item => {
       const key = Object.keys(fotos).find(k => k.includes(item.foto));
       return key ? (
-        <figure class:list={['galeria-item', item.span]}>
-          <Picture src={fotos[key]} formats={['avif']} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 64rem) 50vw, 100vw" alt={item.alt} loading="lazy" />
+        <figure class="galeria-celda marco-parallax" style={`grid-area: ${item.area}`}>
+          <Picture src={fotos[key]} formats={['avif']} fallbackFormat="webp" widths={[400, 800, 1200]} sizes="(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw" alt={item.alt} loading="lazy" />
+          <figcaption class="galeria-caption">{item.caption}</figcaption>
         </figure>
       ) : null;
     })}
@@ -32,31 +36,85 @@ const cuadricula = [
 </section>
 
 <style>
-  .galeria-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    margin-top: clamp(2rem, 4vw, 3rem);
+  .galeria-seccion { overflow: hidden; padding-block: clamp(6rem, 12vw, 10rem); }
+  .galeria-cabeza { margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .galeria-label {
+    font: 500 var(--t-xs)/1 var(--fm); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--acento-claro); margin-bottom: 0.75rem;
   }
-  .galeria-item {
-    margin: 0; overflow: hidden; border-radius: 0.75rem;
-    background: var(--superficie);
-  }
-  .galeria-item :global(img) {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .galeria-item:hover :global(img) { transform: scale(1.03); }
 
+  .galeria-bleed {
+    width: 100vw; margin-inline: calc(50% - 50vw);
+    display: flex; gap: 0.75rem;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-inline: var(--gutter);
+  }
+  .galeria-bleed::-webkit-scrollbar { display: none; }
+  .galeria-celda {
+    position: relative;
+    margin: 0; overflow: hidden; background: var(--superficie);
+    flex: 0 0 78vw; aspect-ratio: 4 / 3;
+    border-radius: 1rem;
+    scroll-snap-align: center;
+  }
+  .galeria-celda :global(picture) {
+    display: block; width: 100%; height: 100%;
+  }
+  .galeria-celda :global(img) {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .galeria-celda:hover :global(img) { transform: scale(1.04); }
+
+  .galeria-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 2.5rem 1rem 0.75rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    font: 500 var(--t-xs) var(--fm);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--texto); opacity: 0;
+    transform: translateY(0.5rem);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .galeria-celda:hover .galeria-caption {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* Tablet+: restore grid, remove scroll */
   @media (min-width: 48rem) {
-    .galeria-grid {
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: 280px;
+    .galeria-bleed {
+      display: grid; gap: 4px;
+      overflow: visible; scroll-snap-type: none;
+      padding-inline: 0;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 22vw 22vw 22vw 22vw 22vw;
+      grid-template-areas:
+        "a b"
+        "a c"
+        "d e"
+        "f e"
+        "g h";
     }
-    .grande { grid-column: span 2; }
+    .galeria-celda {
+      flex: unset; aspect-ratio: unset; border-radius: 0;
+      scroll-snap-align: unset;
+    }
   }
 
+  /* Desktop: 3 columns, asymmetric masonry-like */
   @media (min-width: 64rem) {
-    .galeria-grid { grid-auto-rows: 340px; gap: 1rem; }
+    .galeria-bleed {
+      grid-template-columns: 1.3fr 0.7fr 1fr;
+      grid-template-rows: 18vw 18vw 14vw 16vw;
+      grid-template-areas:
+        "a b d"
+        "a c e"
+        "f f e"
+        "g g h";
+    }
   }
 </style>

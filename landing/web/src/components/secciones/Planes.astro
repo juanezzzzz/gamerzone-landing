@@ -45,7 +45,7 @@ const MENSAJE: Record<string, string> = {
   }
   .plan {
     position: relative; isolation: isolate; display: block; flex: none;
-    width: min(85vw, 28rem); aspect-ratio: 4 / 5; border-radius: 1.25rem; overflow: hidden;
+    width: min(85vw, 28rem); aspect-ratio: 4 / 5; border-radius: 0.75rem; overflow: hidden;
     background: #0b0d12; color: var(--texto-noche); text-decoration: none;
     box-shadow: 0 4px 12px -4px rgba(16, 21, 28, 0.2), 0 20px 50px -20px rgba(16, 21, 28, 0.5);
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
@@ -68,8 +68,8 @@ const MENSAJE: Record<string, string> = {
   .plan p { color: color-mix(in srgb, var(--texto-noche) 78%, transparent); margin-top: 0.5rem; font-size: var(--t-s); }
   .plan-accion {
     display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 1rem; padding: 0.55rem 1rem; border-radius: 999px;
-    font-weight: 600; font-size: var(--t-s); background: color-mix(in srgb, #fff 12%, transparent); backdrop-filter: blur(8px);
-    border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+    font-weight: 600; font-size: var(--t-s); background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
   }
   .plan-accion :global(svg) { width: 1rem; height: 1rem; }

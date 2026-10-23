@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..700&family=Sora:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400..700&display=swap');
 
 :root {
   --noche: #080808;
@@ -27,6 +27,7 @@
 
   --fd: 'Sora', system-ui, sans-serif;
   --ft: 'DM Sans', system-ui, sans-serif;
+  --fm: 'JetBrains Mono', ui-monospace, monospace;
 
   --t-xs: 0.8125rem;
   --t-s: 0.9375rem;
@@ -114,6 +115,23 @@ dt, .rotulo { font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.06em; 
 }
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.declaracion { padding-block: clamp(8rem, 18vw, 16rem); text-align: center; }
+.declaracion-texto {
+  font: 700 clamp(2.5rem, 6.5vw, 5.5rem)/1.05 var(--fd); letter-spacing: -0.03em; text-transform: uppercase;
+  color: var(--texto); max-width: 18ch; margin-inline: auto;
+}
+.declaracion-texto em { font-style: normal; color: var(--acento-claro); }
+
+.cta-movil {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+  display: flex; align-items: center; justify-content: center;
+  height: var(--barra-movil); padding: 0 var(--gutter);
+  background: var(--acento); color: #fff;
+  font: 600 1rem/1 var(--ft); letter-spacing: 0.02em; text-decoration: none; text-transform: uppercase;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
+}
+@media (min-width: 64rem) { .cta-movil { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }

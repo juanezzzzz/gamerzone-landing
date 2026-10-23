@@ -16,13 +16,13 @@ function cuandoLibre(fn: () => void) {
 }
 
 export function iniciar() {
+  ScrollTrigger.getAll().forEach(st => st.kill());
+
   estado();
   cabecera();
   iniciarSonido();
   posters();
 
-  // Con movimiento reducido todo queda quieto y legible: sin scroll suave, sin escenas ni videos en marcha,
-  // y el control del inicio como imagen fija ya encendida.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { mostrarPosterEncendido(); return; }
 
   videos();

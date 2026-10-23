@@ -2,6 +2,7 @@
 # Los videos maestros, renders y proyectos de video (cientos de MB) quedan fuera.
 /*
 !/.gitignore
+!/.github/
 !/README.md
 !/landing/
 /landing/*

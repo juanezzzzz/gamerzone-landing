@@ -92,39 +92,43 @@ import { whatsapp } from '../../lib/sitio';
   .tarifas-cuerpo .entrada { color: var(--gris-noche); }
 
   .carta {
-    padding: 1.75rem; border-radius: 1.25rem;
-    background: color-mix(in srgb, #fff 5%, transparent);
-    border: 1px solid color-mix(in srgb, #fff 10%, transparent);
-    backdrop-filter: blur(12px);
+    padding: clamp(2rem, 5vw, 3rem); border-radius: 0.75rem;
+    background: var(--superficie);
+    border: 1px solid var(--linea);
   }
-  .carta-rotulo, .paquete-sello { font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--violeta-claro); }
-  .carta-lista { margin: 1rem 0 0; }
-  .carta-fila { display: flex; align-items: baseline; gap: 0.75rem; padding-block: 1rem; }
-  .carta-fila + .carta-fila { border-top: 1px solid color-mix(in srgb, #fff 8%, transparent); }
+  .carta-rotulo, .paquete-sello {
+    font: 500 var(--t-xs)/1 var(--fm); letter-spacing: 0.1em; text-transform: uppercase; color: var(--acento-claro);
+  }
+  .carta-lista { margin: 1.25rem 0 0; }
+  .carta-fila { display: flex; align-items: baseline; gap: 0.75rem; padding-block: 1.35rem; }
+  .carta-fila + .carta-fila { border-top: 1px solid color-mix(in srgb, #fff 6%, transparent); }
   .carta-fila dt { font-weight: 600; letter-spacing: 0; color: var(--texto-noche); font-size: var(--t-base); }
   .carta-fila dt span { display: block; font-weight: 400; font-size: var(--t-s); color: var(--gris-noche); margin-top: 0.1rem; }
   .carta-puntos { flex: 1; min-width: 1rem; border-bottom: 2px dotted color-mix(in srgb, #fff 18%, transparent); transform: translateY(-0.35em); }
   .carta-fila dd { margin: 0; font: 400 var(--t-l)/1 var(--fd); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--rosa); }
 
-  .paquetes { display: grid; gap: 1.25rem; }
+  .paquetes { display: grid; gap: 1.5rem; }
   .paquete {
-    position: relative; display: flex; flex-direction: column; padding: 1.75rem; border-radius: 1.25rem;
-    background: color-mix(in srgb, #fff 5%, transparent); border: 1px solid color-mix(in srgb, #fff 10%, transparent);
-    backdrop-filter: blur(12px);
+    position: relative; display: flex; flex-direction: column;
+    padding: clamp(2rem, 5vw, 3rem); border-radius: 0.75rem;
+    background: var(--superficie);
+    border: 1px solid var(--linea);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.3s ease;
   }
-  .paquete:hover { transform: translateY(-3px); border-color: color-mix(in srgb, #fff 18%, transparent); }
+  .paquete:hover { transform: translateY(-3px); border-color: rgba(255, 255, 255, 0.16); }
   .paquete.destacado {
-    background: var(--superficie-2);
-    border-color: color-mix(in srgb, var(--acento) 35%, transparent);
+    background: color-mix(in srgb, var(--acento) 8%, var(--superficie-2));
+    border-color: color-mix(in srgb, var(--acento) 40%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--acento) 14%, transparent),
+                0 12px 40px -8px rgba(37, 99, 235, 0.22);
   }
-  .paquete.destacado:hover { transform: translateY(-4px); }
+  .paquete.destacado:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--acento) 55%, transparent); }
   .paquete h3 { font-size: var(--t-l); margin-top: 0.4rem; }
   .paquete-sello { margin-bottom: 0.2rem; }
-  .paquete-precio { margin-top: 1rem; font: 400 clamp(2.8rem, 5.5vw, 3.8rem)/1 var(--fd); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--texto-noche); }
+  .paquete-precio { margin-top: 1.25rem; font: 400 clamp(2.8rem, 5.5vw, 3.8rem)/1 var(--fd); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--texto-noche); }
   .destacado .paquete-precio { color: var(--rosa); }
   .paquete-ahorro { margin-top: 0.4rem; color: var(--violeta-claro); font-weight: 600; font-size: var(--t-s); }
-  .paquete ul { list-style: none; margin: 1.25rem 0 1.75rem; padding: 0; display: grid; gap: 0.55rem; color: color-mix(in srgb, var(--texto-noche) 82%, transparent); font-size: var(--t-s); }
+  .paquete ul { list-style: none; margin: 1.5rem 0 2rem; padding: 0; display: grid; gap: 0.65rem; color: color-mix(in srgb, var(--texto-noche) 82%, transparent); font-size: var(--t-s); }
   .paquete li { position: relative; padding-left: 1.5rem; }
   .paquete li::before {
     content: ''; position: absolute; left: 0.1rem; top: 0.35em; width: 0.75rem; height: 0.42rem;

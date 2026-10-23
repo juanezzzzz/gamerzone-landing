@@ -32,7 +32,7 @@ import { WA } from '../../lib/sitio';
 <style>
   .preguntas { display: grid; gap: 2.5rem; }
   .otra {
-    margin-top: 2rem; padding: 1.75rem; border-radius: 1.25rem; max-width: 24rem;
+    margin-top: 2rem; padding: 1.75rem; border-radius: 0.75rem; max-width: 24rem;
     background: var(--superficie-2);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--texto);
@@ -45,12 +45,11 @@ import { WA } from '../../lib/sitio';
   /* Acordeón: una abierta a la vez (name), con apertura suave donde el navegador lo permite */
   .lista-preguntas { display: grid; gap: 0.75rem; interpolate-size: allow-keywords; }
   details {
-    border-radius: 1.25rem; background: color-mix(in srgb, #fff 4%, transparent); border: 1px solid rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(8px);
+    border-radius: 0.75rem; background: var(--superficie); border: 1px solid rgba(255, 255, 255, 0.07);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
   details:hover { border-color: rgba(255, 255, 255, 0.14); }
-  details[open] { border-color: rgba(255, 255, 255, 0.14); }
+  details[open] { border-color: rgba(255, 255, 255, 0.14); background: var(--superficie-2); }
   details::details-content { height: 0; overflow: clip; transition: height 0.45s cubic-bezier(0.16, 1, 0.3, 1), content-visibility 0.45s allow-discrete; }
   details[open]::details-content { height: auto; }
   summary {

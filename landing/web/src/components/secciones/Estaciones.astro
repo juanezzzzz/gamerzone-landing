@@ -1,11 +1,18 @@
 ---
-import Dato from '../Dato.astro';
+import { Picture } from 'astro:assets';
 import Video from '../Video.astro';
 import { ESTACIONES, BOTONES } from '../../data/local';
 import { whatsapp } from '../../lib/sitio';
 
+import fotoPc from '../../assets/experiencias/pc-arena.jpg';
+import fotoConsolas from '../../assets/experiencias/consolas-social.jpg';
+import fotoFutbol from '../../assets/experiencias/futbol-comp.jpg';
+import fotoVip from '../../assets/experiencias/vip-lounge.jpg';
+
 const apartar = (nombre: string, puesto: string) =>
   whatsapp(`Hola GamerZone, quiero apartar un puesto en ${nombre} (puesto ${puesto}). ¿Tienen disponible?`);
+
+const [pc, consolas, futbol, salas] = ESTACIONES;
 ---
 <section class="seccion" id="estaciones" aria-labelledby="t-estaciones">
   <div class="envoltura">
@@ -13,10 +20,8 @@ const apartar = (nombre: string, puesto: string) =>
     <p class="entrada">No todos vienen a jugar de la misma manera.</p>
   </div>
   <div class="envoltura recorrido">
-    <!-- Escritorio: pantalla fija que cambia de estación al bajar (efectos/recorrido.ts la activa) -->
     <div class="escenario" aria-hidden="true">
       {ESTACIONES.map((e) => <div class="escenario-capa"><Video clip={e.id} /></div>)}
-      <!-- El control del inicio: el botón de la estación activa se enciende (efectos/recorrido.ts) -->
       <div class="mando">
         <img src="/media/control-3d.webp" alt="" width="1575" height="1260" loading="lazy" decoding="async" />
         {ESTACIONES.map((e) => (
@@ -30,21 +35,104 @@ const apartar = (nombre: string, puesto: string) =>
     </div>
 
     <div class="estaciones">
-      {ESTACIONES.map((e) => (
-        <article class="estacion" id={e.id} data-puesto={e.puesto} data-nombre={e.nombre}>
-          <div class="estacion-media"><Video clip={e.id} auto /></div>
-          <div class="estacion-cuerpo">
-            <p class="puesto"><span class="letra" style={`--b: ${BOTONES[e.boton].color}`} aria-label={`Botón ${e.boton}`}>{e.boton}</span>Puesto {e.puesto}</p>
-            <h3>{e.nombre}</h3>
-            <p class="estacion-texto">{e.texto}</p>
-            <ul class="incluye" aria-label={`Qué incluye ${e.nombre}`}>
-              {e.incluye.map((i) => <li><Dato pendiente>{i}</Dato></li>)}
-            </ul>
-            <p class="precio"><span>Precio</span> <Dato pendiente={e.precio.pendiente}>{e.precio.texto}</Dato></p>
-            <a class="boton boton-principal estacion-cta" href={apartar(e.nombre, e.puesto)} target="_blank" rel="noopener">Apartar en {e.nombre}</a>
+
+      {/* ═══ PC ARENA — War Room: specs como protagonista, autoridad técnica ═══ */}
+      <article class="estacion" id="pc" data-puesto={pc.puesto} data-nombre={pc.nombre} data-variante="pc">
+        <div class="estacion-media"><Video clip="pc" auto /></div>
+        <div class="estacion-cuerpo pc-layout">
+          <div class="pc-specs-grid" aria-label="Especificaciones">
+            {pc.specs.map(s => <div class="pc-spec"><span class="pc-spec-val">{s}</span></div>)}
           </div>
-        </article>
-      ))}
+          <p class="pc-etiqueta">
+            <span class="letra" style={`--b: ${BOTONES[pc.boton].color}`} aria-label={`Botón ${pc.boton}`}>{pc.boton}</span>
+            Puesto {pc.puesto} &middot; {pc.subtitulo}
+          </p>
+          <h3 class="pc-titulo">{pc.nombre}</h3>
+          <p class="pc-texto">{pc.texto}</p>
+          <figure class="estacion-foto">
+            <Picture src={fotoPc} formats={['avif']} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 64rem) 0px, 90vw" alt="Estación PC con torres RGB encendidas" loading="lazy" />
+          </figure>
+          <div class="pc-pie">
+            <span class="pc-precio">{pc.precio.texto}</span>
+            <a class="boton boton-principal" href={apartar(pc.nombre, pc.puesto)} target="_blank" rel="noopener">Reservar</a>
+          </div>
+        </div>
+      </article>
+
+      {/* ═══ CONSOLE LOUNGE — Lifestyle editorial: statement dominante ═══ */}
+      <article class="estacion" id="consolas" data-puesto={consolas.puesto} data-nombre={consolas.nombre} data-variante="consolas">
+        <div class="estacion-media"><Video clip="consolas" auto /></div>
+        <div class="estacion-cuerpo consolas-layout">
+          <p class="consolas-cat">
+            <span class="letra" style={`--b: ${BOTONES[consolas.boton].color}`} aria-label={`Botón ${consolas.boton}`}>{consolas.boton}</span>
+            {consolas.nombre}
+          </p>
+          <h3 class="consolas-statement">{consolas.subtitulo}</h3>
+          <p class="consolas-texto">{consolas.texto}</p>
+          <p class="consolas-specs">
+            {consolas.specs.map((s, i) => <>{i > 0 && <span class="consolas-dot" aria-hidden="true"> · </span>}{s}</>)}
+          </p>
+          <figure class="estacion-foto">
+            <Picture src={fotoConsolas} formats={['avif']} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 64rem) 0px, 90vw" alt="Amigos jugando juntos en consola" loading="lazy" />
+          </figure>
+          <div class="consolas-pie">
+            <span class="consolas-precio">{consolas.precio.texto}</span>
+            <a class="boton boton-principal" href={apartar(consolas.nombre, consolas.puesto)} target="_blank" rel="noopener">Reservar</a>
+          </div>
+        </div>
+      </article>
+
+      {/* ═══ FÚTBOL — Match Day: número dominante, energía competitiva ═══ */}
+      <article class="estacion" id="futbol" data-puesto={futbol.puesto} data-nombre={futbol.nombre} data-variante="futbol">
+        <div class="estacion-media"><Video clip="futbol" auto /></div>
+        <div class="estacion-cuerpo futbol-layout">
+          <span class="futbol-numero" aria-hidden="true">{futbol.puesto}</span>
+          <div class="futbol-modo">
+            <span class="futbol-modo-item">1v1</span>
+            <span class="futbol-modo-sep" aria-hidden="true"></span>
+            <span class="futbol-modo-item">2v2</span>
+          </div>
+          <h3 class="futbol-titulo">{futbol.nombre}</h3>
+          <p class="futbol-sub">{futbol.subtitulo}</p>
+          <p class="futbol-texto">{futbol.texto}</p>
+          <div class="futbol-features">
+            {futbol.specs.map(s => <span class="futbol-feat">{s}</span>)}
+          </div>
+          <figure class="estacion-foto">
+            <Picture src={fotoFutbol} formats={['avif']} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 64rem) 0px, 90vw" alt="Partido de fútbol en pantalla grande" loading="lazy" />
+          </figure>
+          <div class="futbol-pie">
+            <span class="futbol-precio">{futbol.precio.texto}</span>
+            <a class="boton boton-principal futbol-cta" href={apartar(futbol.nombre, futbol.puesto)} target="_blank" rel="noopener">Reservar</a>
+          </div>
+        </div>
+      </article>
+
+      {/* ═══ SALA VIP — Luxury minimal: la ausencia es el diseño ═══ */}
+      <article class="estacion" id="salas" data-puesto={salas.puesto} data-nombre={salas.nombre} data-variante="salas">
+        <div class="estacion-media"><Video clip="salas" auto /></div>
+        <div class="estacion-cuerpo vip-layout">
+          <hr class="vip-regla" aria-hidden="true" />
+          <p class="vip-cat">
+            <span class="letra" style={`--b: #D4AF37`} aria-label={`Botón ${salas.boton}`}>{salas.boton}</span>
+            Puesto {salas.puesto}
+          </p>
+          <h3 class="vip-titulo">{salas.nombre}</h3>
+          <p class="vip-sub">{salas.subtitulo}</p>
+          <p class="vip-texto">{salas.texto}</p>
+          <p class="vip-amenidades">
+            {salas.specs.map((s, i) => <>{i > 0 && <span class="vip-dot" aria-hidden="true"> · </span>}{s}</>)}
+          </p>
+          <figure class="estacion-foto">
+            <Picture src={fotoVip} formats={['avif']} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 64rem) 0px, 90vw" alt="Sala VIP con sofá y pantalla grande" loading="lazy" />
+          </figure>
+          <div class="vip-pie">
+            <span class="vip-precio">{salas.precio.texto}</span>
+            <a class="boton vip-cta" href={apartar(salas.nombre, salas.puesto)} target="_blank" rel="noopener">Reservar experiencia</a>
+          </div>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
@@ -53,70 +141,354 @@ const apartar = (nombre: string, puesto: string) =>
   .recorrido { margin-top: clamp(2rem, 5vw, 3rem); }
   .escenario { display: none; }
 
-  /* Tarjetas: celular, sin script y con movimiento reducido */
-  .estaciones { display: grid; gap: 1.25rem; }
+  /* ─────────────────────────────────────────
+     SHARED: estructura para scroll mechanism
+     ───────────────────────────────────────── */
+  .estaciones { display: flex; flex-direction: column; gap: 0; }
   .estacion {
-    position: relative;
-    background: linear-gradient(160deg, color-mix(in srgb, #fff 5%, transparent), color-mix(in srgb, #fff 2%, transparent));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 1.25rem; overflow: hidden; box-shadow: var(--sombra); display: flex; flex-direction: column;
-    backdrop-filter: blur(16px);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease, border-color 0.4s ease;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    min-height: 85svh;
   }
-  .estacion:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--sombra-elevada);
-    border-color: rgba(255, 255, 255, 0.16);
-  }
-  .estacion-media { aspect-ratio: 16 / 10; background: #0b0d12; overflow: hidden; }
-  .estacion-media :global(video) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
-  .estacion:hover .estacion-media :global(video) { transform: scale(1.04); }
-  .estacion-cuerpo { padding: 1.5rem 1.6rem 1.6rem; display: flex; flex-direction: column; flex: 1; }
-  .puesto { display: flex; align-items: center; gap: 0.6rem; font: 400 var(--t-xs)/1 var(--fd); letter-spacing: 0.06em; color: var(--violeta-claro); font-variant-numeric: tabular-nums; text-transform: uppercase; }
-  .estacion h3 { font-size: var(--t-l); margin-top: 0.5rem; }
-  .estacion-texto { color: var(--gris); margin-top: 0.55rem; max-width: 46ch; }
-  .incluye { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: 0.45rem; font-size: var(--t-s); }
-  .incluye li { position: relative; padding-left: 1.6rem; }
-  /* Visto de línea en el cian de la marca */
-  .incluye li::before {
-    content: ''; position: absolute; left: 0.1rem; top: 0.35em; width: 0.8rem; height: 0.45rem;
-    border-left: 2px solid var(--cian); border-bottom: 2px solid var(--cian); transform: rotate(-45deg);
-  }
-  .precio { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-weight: 650; font-variant-numeric: tabular-nums; }
-  .precio span:first-child { font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); }
-  /* La letra del botón del control que corresponde a la estación, con su color */
-  .letra {
-    display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%;
-    background: var(--b); color: #07090f; font: 700 0.8rem/1 var(--ft); letter-spacing: 0;
-    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2), 0 0 0 3px color-mix(in srgb, var(--b) 22%, transparent);
-  }
-  .estacion-cta { margin-top: 1.25rem; align-self: flex-start; }
-  @media (min-width: 48rem) { .estaciones { grid-template-columns: 1fr 1fr; } }
+  .estacion + .estacion { border-top: 1px solid var(--linea); }
 
-  /* Recorrido de escritorio: pantalla fija a la izquierda, estaciones bajando a la derecha */
+  .estacion-media {
+    position: absolute; inset: 0; z-index: 0;
+    background: #0b0d12;
+  }
+  .estacion-media :global(video) {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .estacion-cuerpo {
+    position: relative; z-index: 1;
+    padding: clamp(2rem, 6vw, 3rem) var(--gutter);
+    display: flex; flex-direction: column;
+    flex: 1;
+  }
+
+  .letra {
+    display: inline-grid; place-items: center;
+    width: 1.5rem; height: 1.5rem; border-radius: 50%;
+    background: var(--b); color: #07090f;
+    font: 700 0.75rem/1 var(--ft); letter-spacing: 0;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2), 0 0 0 3px color-mix(in srgb, var(--b) 22%, transparent);
+    vertical-align: middle;
+  }
+
+  .estacion-foto {
+    margin: 1.25rem 0 0; overflow: hidden; border-radius: 0.5rem;
+    max-width: 24rem;
+  }
+  .estacion-foto :global(img) {
+    width: 100%; height: auto; display: block;
+    aspect-ratio: 16 / 10; object-fit: cover;
+  }
+  .consolas-layout .estacion-foto,
+  .vip-layout .estacion-foto { margin-inline: auto; }
+
+
+  /* ═══════════════════════════════════════════
+     PC ARENA — War Room
+     Jerarquía: specs grid → etiqueta → título → texto → precio
+     ═══════════════════════════════════════════ */
+  .estacion[data-variante="pc"] .estacion-media :global(video) { opacity: 0.5; }
+  .pc-layout {
+    justify-content: flex-end;
+    background: linear-gradient(to top, rgba(8,8,8,0.95) 35%, rgba(8,8,8,0.4) 70%, transparent);
+  }
+
+  .pc-specs-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+    margin-bottom: 1.25rem; max-width: 20rem;
+  }
+  .pc-spec {
+    padding: 0.65rem 0.85rem;
+    background: rgba(79,123,255,0.08);
+    border: 1px solid rgba(79,123,255,0.15);
+    border-radius: 0.4rem;
+  }
+  .pc-spec-val {
+    font: 600 0.95rem/1.2 var(--fm);
+    letter-spacing: 0.04em;
+    color: rgba(79,123,255,0.9);
+  }
+
+  .pc-etiqueta {
+    display: flex; align-items: center; gap: 0.5rem;
+    font: 500 var(--t-xs)/1 var(--fd);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--texto-secundario);
+    margin-bottom: 0.4rem;
+  }
+  .pc-titulo {
+    font: 700 clamp(1.8rem, 6vw, 2.8rem)/0.95 var(--fd);
+  }
+  .pc-texto {
+    color: var(--texto-secundario);
+    font-size: var(--t-base); line-height: 1.5;
+    max-width: 32ch; margin-top: 0.5rem;
+  }
+  .pc-pie {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; margin-top: 1.5rem; padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    max-width: 22rem;
+  }
+  .pc-precio {
+    font: 650 var(--t-m)/1 var(--fd);
+    font-variant-numeric: tabular-nums;
+  }
+
+
+  /* ═══════════════════════════════════════════
+     CONSOLE LOUNGE — Lifestyle Editorial
+     Jerarquía: categoría → STATEMENT gigante → texto → specs → precio
+     ═══════════════════════════════════════════ */
+  .estacion[data-variante="consolas"] .estacion-media :global(video) { opacity: 0.4; }
+  .consolas-layout {
+    align-items: center; text-align: center;
+    justify-content: flex-end;
+    background: linear-gradient(to top, rgba(8,8,8,0.92) 30%, rgba(8,8,8,0.25) 70%, transparent);
+  }
+
+  .consolas-cat {
+    display: flex; align-items: center; gap: 0.5rem;
+    font: 400 var(--t-xs)/1 var(--fd);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--texto-secundario);
+    margin-bottom: 0.75rem;
+  }
+  .consolas-statement {
+    font: 800 clamp(2.5rem, 9vw, 4.5rem)/0.9 var(--fd);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    max-width: 14ch;
+  }
+  .consolas-texto {
+    color: var(--texto-secundario);
+    font-size: var(--t-m); line-height: 1.5;
+    max-width: 30ch; margin-top: 1rem;
+  }
+  .consolas-specs {
+    font: 400 var(--t-s)/1.4 var(--fm);
+    color: var(--texto-secundario);
+    margin-top: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .consolas-dot { color: rgba(255,255,255,0.25); }
+
+  .consolas-pie {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1.5rem; margin-top: 1.5rem; padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    width: 100%; max-width: 20rem;
+  }
+  .consolas-precio {
+    font: 650 var(--t-m)/1 var(--fd);
+    font-variant-numeric: tabular-nums;
+  }
+
+
+  /* ═══════════════════════════════════════════
+     FÚTBOL — Match Day
+     Jerarquía: NÚMERO gigante → modo versus → título → sub → features → precio
+     ═══════════════════════════════════════════ */
+  .estacion[data-variante="futbol"] .estacion-media :global(video) { opacity: 0.5; }
+  .futbol-layout {
+    justify-content: flex-end;
+    background: linear-gradient(to top, rgba(8,8,8,0.94) 30%, rgba(8,8,8,0.35) 65%, transparent);
+  }
+
+  .futbol-numero {
+    position: absolute; top: clamp(0.5rem, 3vw, 2rem); right: var(--gutter);
+    font: 900 clamp(8rem, 28vw, 16rem)/0.75 var(--fd);
+    letter-spacing: -0.06em;
+    color: rgba(43,217,124,0.07);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .futbol-modo {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .futbol-modo-item {
+    font: 800 1.1rem/1 var(--fd);
+    letter-spacing: 0.05em;
+    color: #2BD97C;
+  }
+  .futbol-modo-sep {
+    width: 1.5rem; height: 2px;
+    background: linear-gradient(90deg, #2BD97C, transparent);
+  }
+
+  .futbol-titulo {
+    font: 700 clamp(2.2rem, 8vw, 3.5rem)/0.95 var(--fd);
+  }
+  .futbol-sub {
+    font: 600 var(--t-base)/1.3 var(--fd);
+    color: #2BD97C;
+    letter-spacing: 0.02em;
+    margin-top: 0.35rem;
+  }
+  .futbol-texto {
+    color: var(--texto-secundario);
+    font-size: var(--t-base); line-height: 1.5;
+    max-width: 34ch; margin-top: 0.5rem;
+  }
+
+  .futbol-features {
+    display: flex; flex-wrap: wrap; gap: 0.45rem;
+    margin-top: 1rem;
+  }
+  .futbol-feat {
+    font: 500 var(--t-xs)/1 var(--fm);
+    padding: 0.4rem 0.65rem; border-radius: 2rem;
+    background: rgba(43,217,124,0.08);
+    color: rgba(43,217,124,0.85);
+    border: 1px solid rgba(43,217,124,0.12);
+    letter-spacing: 0.02em;
+  }
+
+  .futbol-pie {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; margin-top: 1.5rem; padding-top: 1rem;
+    border-top: 1px solid rgba(43,217,124,0.1);
+    max-width: 22rem;
+  }
+  .futbol-precio {
+    font: 650 var(--t-m)/1 var(--fd);
+    font-variant-numeric: tabular-nums;
+  }
+  .futbol-cta {
+    background: #2BD97C; color: #0A0A0A;
+  }
+  .futbol-cta:hover { background: #47E892; }
+
+
+  /* ═══════════════════════════════════════════
+     SALA VIP — Luxury Minimal
+     Jerarquía: regla dorada → categoría → título ligero → sub itálico → texto → amenidades → precio
+     ═══════════════════════════════════════════ */
+  .estacion[data-variante="salas"] .estacion-media :global(video) { opacity: 0.3; }
+  .vip-layout {
+    align-items: center; text-align: center;
+    justify-content: center;
+    background: linear-gradient(to top, rgba(12,12,12,0.96) 40%, rgba(12,12,12,0.5) 70%, transparent);
+  }
+
+  .vip-regla {
+    width: clamp(3rem, 12vw, 5rem); height: 1px;
+    border: none; background: #D4AF37;
+    margin: 0 auto 1.5rem;
+    opacity: 0.6;
+  }
+
+  .vip-cat {
+    display: flex; align-items: center; gap: 0.5rem; justify-content: center;
+    font: 400 var(--t-xs)/1 var(--fm);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(212,175,55,0.6);
+    margin-bottom: 0.5rem;
+  }
+
+  .vip-titulo {
+    font: 300 clamp(2.5rem, 8vw, 4rem)/0.95 var(--fd);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .vip-sub {
+    font: italic 500 var(--t-l)/1.3 var(--fd);
+    color: #D4AF37;
+    margin-top: 0.5rem;
+  }
+  .vip-texto {
+    color: var(--texto-secundario);
+    font-size: var(--t-base); line-height: 1.6;
+    max-width: 28ch; margin-top: 1rem;
+  }
+  .vip-amenidades {
+    font: 400 var(--t-s)/1.4 var(--fm);
+    color: rgba(212,175,55,0.5);
+    margin-top: 1rem;
+    letter-spacing: 0.03em;
+  }
+  .vip-dot { color: rgba(212,175,55,0.25); }
+
+  .vip-pie {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1rem; margin-top: 2rem; padding-top: 1.25rem;
+    border-top: 1px solid rgba(212,175,55,0.12);
+    width: 100%; max-width: 18rem;
+  }
+  .vip-precio {
+    font: 650 var(--t-l)/1 var(--fd);
+    font-variant-numeric: tabular-nums;
+    color: #D4AF37;
+  }
+  .vip-cta {
+    background: #D4AF37; color: #0A0A0A;
+    font-weight: 600; letter-spacing: 0.04em;
+    width: 100%; text-align: center;
+    padding: 0.85rem 2rem;
+  }
+  .vip-cta:hover { background: #E8C547; }
+
+
+  /* ─────────────────────────────────────────
+     TABLET: composiciones con más espacio
+     ───────────────────────────────────────── */
+  @media (min-width: 48rem) {
+    .estacion { min-height: 75svh; }
+    .estacion-cuerpo { padding: clamp(2.5rem, 5vw, 4rem) clamp(2rem, 5vw, 4rem); }
+
+    .pc-specs-grid { max-width: 26rem; gap: 0.65rem; }
+    .pc-spec { padding: 0.8rem 1rem; }
+    .pc-spec-val { font-size: 1.1rem; }
+    .pc-layout { max-width: none; }
+    .pc-layout > * { max-width: 32rem; }
+
+    .consolas-statement { font-size: clamp(3rem, 8vw, 5rem); }
+    .consolas-texto { max-width: 36ch; }
+
+    .futbol-numero { font-size: clamp(12rem, 22vw, 20rem); }
+
+    .vip-titulo { font-size: clamp(3rem, 7vw, 5rem); }
+    .vip-layout { padding-top: clamp(4rem, 10vw, 8rem); padding-bottom: clamp(4rem, 10vw, 8rem); }
+  }
+
+
+  /* ─────────────────────────────────────────
+     ESCRITORIO: recorrido sticky (efectos/recorrido.ts)
+     ───────────────────────────────────────── */
   @media (min-width: 64rem) {
-    :global(.recorrido-activo) .recorrido { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(3rem, 6vw, 6rem); }
+    :global(.recorrido-activo) .recorrido {
+      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(3rem, 6vw, 6rem);
+    }
     :global(.recorrido-activo) .escenario {
-      display: block; position: sticky; top: 13vh; height: 74vh; border-radius: 1.5rem; overflow: hidden;
+      display: block; position: sticky; top: 13vh; height: 74vh;
+      border-radius: 1.5rem; overflow: hidden;
       background: #0b0d12;
-      box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.2), 0 30px 80px -30px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 8px 24px -8px rgba(0,0,0,0.2), 0 30px 80px -30px rgba(0,0,0,0.45);
       border: 1px solid color-mix(in srgb, #fff 6%, transparent);
     }
     .escenario-capa { position: absolute; inset: 0; clip-path: inset(100% 0% 0% 0%); }
     .escenario-capa:first-child { clip-path: inset(0% 0% 0% 0%); }
     .escenario-capa :global(video) { width: 100%; height: 100%; object-fit: cover; }
-    /* Con WebGL el lienzo pinta los videos; las capas siguen ahí (invisibles) para que los videos decodifiquen */
     .escenario :global(.escenario-gl) { position: absolute; inset: 0; z-index: 3; width: 100% !important; height: 100% !important; }
     .escenario:global(.con-gl) .escenario-capa { opacity: 0; clip-path: none; }
 
     .escenario-pie {
-      position: absolute; inset: auto 0 0; z-index: 5; display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
-      padding: 5rem 2rem 1.75rem; color: #fff; background: linear-gradient(to top, rgba(7, 9, 15, 0.82), transparent);
+      position: absolute; inset: auto 0 0; z-index: 5;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
+      padding: 5rem 2rem 1.75rem; color: #fff;
+      background: linear-gradient(to top, rgba(7,9,15,0.82), transparent);
     }
-    /* El control, arriba a la derecha de la pantalla, con un anillo de luz sobre cada botón */
     .mando {
-      position: absolute; top: 1.25rem; right: 1.25rem; z-index: 5; width: clamp(9rem, 14vw, 12rem);
-      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
+      position: absolute; top: 1.25rem; right: 1.25rem; z-index: 5;
+      width: clamp(9rem, 14vw, 12rem);
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.6));
     }
     .mando img { display: block; width: 100%; height: auto; }
     .mando-anillo {
@@ -130,22 +502,102 @@ const apartar = (nombre: string, puesto: string) =>
     .escenario-nombre { font: 400 var(--t-m)/1 var(--fd); text-transform: uppercase; letter-spacing: 0.02em; opacity: 0.85; }
     .escenario-num { display: block; font: 400 clamp(4.5rem, 8vw, 7rem)/0.85 var(--fd); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
     .escenario-progreso { list-style: none; margin: 0 0 0.4rem; padding: 0; display: flex; gap: 0.4rem; }
-    .escenario-progreso li { position: relative; width: 2.25rem; height: 3px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, 0.28); font-size: 0; color: transparent; }
-    .escenario-progreso li::after { content: ''; position: absolute; inset: 0; background: var(--b, var(--cian)); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .escenario-progreso li { position: relative; width: 2.25rem; height: 3px; border-radius: 2px; overflow: hidden; background: rgba(255,255,255,0.28); font-size: 0; color: transparent; }
+    .escenario-progreso li::after { content: ''; position: absolute; inset: 0; background: var(--b, var(--acento)); transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
     .escenario-progreso li:global(.lleno)::after { transform: scaleX(1); }
 
+    /* Panel derecho: sin video, sin fondo */
     :global(.recorrido-activo) .estaciones { display: block; }
     :global(.recorrido-activo) .estacion {
       min-height: 74vh; display: flex; align-items: center;
-      background: none; border: 0; box-shadow: none; border-radius: 0; overflow: visible;
-      opacity: 0.28; transition: opacity 0.5s ease;
+      background: none; border: 0; overflow: visible;
+      opacity: 0.15; transition: opacity 0.6s ease;
     }
+    :global(.recorrido-activo) .estacion + .estacion { border-top: none; }
     :global(.recorrido-activo) .estacion:global(.activa) { opacity: 1; }
     :global(.recorrido-activo) .estacion-media { display: none; }
-    :global(.recorrido-activo) .estacion-cuerpo { padding: 0; }
-    :global(.recorrido-activo) .estacion h3 { font-size: var(--t-xl); }
-    :global(.recorrido-activo) .estacion-texto { font-size: var(--t-m); line-height: 1.5; max-width: 30ch; }
-    :global(.recorrido-activo) .precio { max-width: 24rem; }
-    :global(.recorrido-activo) .incluye { grid-template-columns: 1fr 1fr; gap: 0.6rem 1.25rem; max-width: 30rem; font-size: var(--t-base); }
+    :global(.recorrido-activo) .estacion-foto { display: none; }
+    :global(.recorrido-activo) .estacion-cuerpo {
+      padding: 0; background: none;
+    }
+
+    /* ═══ PC ARENA desktop — Left-aligned, specs hero ═══ */
+    :global(.recorrido-activo) .pc-layout {
+      align-items: flex-start; text-align: left;
+      justify-content: center;
+    }
+    :global(.recorrido-activo) .pc-specs-grid {
+      max-width: 24rem; gap: 0.7rem; margin-bottom: 1.75rem;
+    }
+    :global(.recorrido-activo) .pc-spec {
+      padding: 0.8rem 1.1rem;
+      background: rgba(79,123,255,0.1);
+      border-color: rgba(79,123,255,0.18);
+    }
+    :global(.recorrido-activo) .pc-spec-val { font-size: 1.15rem; }
+    :global(.recorrido-activo) .pc-titulo { font-size: var(--t-xl); }
+    :global(.recorrido-activo) .pc-texto {
+      font-size: var(--t-m); line-height: 1.55; max-width: 30ch;
+    }
+    :global(.recorrido-activo) .pc-pie { max-width: 24rem; }
+
+    /* ═══ CONSOLE LOUNGE desktop — Centered, statement hero ═══ */
+    :global(.recorrido-activo) .consolas-layout {
+      align-items: center; text-align: center;
+      justify-content: center;
+    }
+    :global(.recorrido-activo) .consolas-cat { margin-bottom: 1rem; }
+    :global(.recorrido-activo) .consolas-statement {
+      font-size: clamp(3rem, 6vw, 4.5rem);
+    }
+    :global(.recorrido-activo) .consolas-texto {
+      font-size: var(--t-m); max-width: 28ch; margin-top: 1.25rem;
+    }
+    :global(.recorrido-activo) .consolas-specs { margin-top: 1.25rem; }
+    :global(.recorrido-activo) .consolas-pie { max-width: 22rem; margin-inline: auto; }
+
+    /* ═══ FÚTBOL desktop — Number-dominant, left-aligned ═══ */
+    :global(.recorrido-activo) .futbol-layout {
+      align-items: flex-start; text-align: left;
+      justify-content: center;
+    }
+    :global(.recorrido-activo) .futbol-numero {
+      position: relative; top: auto; right: auto;
+      font-size: clamp(10rem, 16vw, 14rem);
+      color: rgba(43,217,124,0.08);
+      margin-bottom: -3rem;
+      line-height: 0.75;
+    }
+    :global(.recorrido-activo) .futbol-titulo {
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+    }
+    :global(.recorrido-activo) .futbol-texto {
+      font-size: var(--t-m); line-height: 1.55; max-width: 30ch;
+    }
+    :global(.recorrido-activo) .futbol-pie { max-width: 24rem; }
+
+    /* ═══ SALA VIP desktop — Max whitespace, centered, gold ═══ */
+    :global(.recorrido-activo) .vip-layout {
+      align-items: center; text-align: center;
+      justify-content: center;
+      padding-top: 0;
+    }
+    :global(.recorrido-activo) .vip-regla {
+      width: clamp(4rem, 8vw, 6rem);
+      margin-bottom: 2rem;
+    }
+    :global(.recorrido-activo) .vip-titulo {
+      font-size: clamp(3.5rem, 6vw, 5rem);
+    }
+    :global(.recorrido-activo) .vip-sub {
+      font-size: var(--t-l);
+      margin-top: 0.75rem;
+    }
+    :global(.recorrido-activo) .vip-texto {
+      font-size: var(--t-m); max-width: 26ch; margin-top: 1.5rem;
+    }
+    :global(.recorrido-activo) .vip-pie {
+      margin-top: 2.5rem; max-width: 20rem;
+    }
   }
 </style>
